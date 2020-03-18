@@ -4,6 +4,7 @@ setlocal EnableDelayedExpansion
 :: See https://github.com/conda/conda-build/issues/2850
 set "CXXFLAGS= -MD"
 set
+set VERBOSE=1
 
 :: Make a build folder and change to it.
 mkdir build
