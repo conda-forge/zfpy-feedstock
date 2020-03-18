@@ -3,8 +3,7 @@ setlocal EnableDelayedExpansion
 :: Remove -GL from CXXFLAGS as this causes a fatal error
 :: See https://github.com/conda/conda-build/issues/2850
 :: set "CXXFLAGS=%CXXFLAGS:-GL=%"
-set CXXFLAGS=
-set
+pushd .
 set VERBOSE=1
 
 :: Make a build folder and change to it.
@@ -12,15 +11,17 @@ mkdir build
 cd build
 
 :: Configure using the CMakeFiles
-cmake -G "NMake Makefiles" ^
+cmake -GNinja ^
     -DBUILD_ZFPY=ON ^
     -DZFP_WITH_OPENMP=OFF ^
+    -CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=OFF ^
     -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" ^
     ..
 if errorlevel 1 exit 1
 
-nmake
+cmake --build . --config Release --target install
 if errorlevel 1 exit 1
 
-nmake install
+ctest
 if errorlevel 1 exit 1
+popd
