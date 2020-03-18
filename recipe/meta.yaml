@@ -10,17 +10,17 @@ source:
 
 build:
   number: 0
-  skip: True  # [win]
   rpaths:
-    - lib/
-    - lib64/
+    - lib/ # [unix]
+    - lib64/ # [unix]
 
 requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - cmake
-    - make
+    - make # [unix]
+    - nmake # [win]
   host:
     - python
     - numpy
