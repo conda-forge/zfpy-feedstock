@@ -11,11 +11,11 @@ mkdir build
 cd build
 
 :: Configure using the CMakeFiles
-cmake -GNinja ^
+cmake -G "NMake Makefiles" ^
     -DCMAKE_BUILD_TYPE=Release ^
     -DBUILD_ZFPY=ON ^
     -DZFP_WITH_OPENMP=OFF ^
-    REM -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=OFF ^
+    -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=OFF ^
     -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" ^
     ..
 if errorlevel 1 exit 1
