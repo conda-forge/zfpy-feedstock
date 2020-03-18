@@ -4,14 +4,29 @@ setlocal EnableDelayedExpansion
 mkdir build
 cd build
 
+set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
+
 :: Configure using the CMakeFiles
-cmake -GNinja -DBUILD_ZFPY=ON -DZFP_WITH_OPENMP=OFF -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" ..
+cmake -G "NMake Makefiles" ^
+  -DBUILD_ZFPY=ON ^
+  -DZFP_WITH_OPENMP=OFF ^
+  -DCMAKE_BUILD_TYPE:STRING=Release ^
+  -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%" ^
+  -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^
+  -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
+  -DCMAKE_INSTALL_PREFIX="%PREFIX%" ^
+  ..
+
 if errorlevel 1 exit 1
 
-:: Build and Install
-cmake --build . --target install --config Release
+nmake
+if errorlevel 1 exit 1
+
+:: Custom installation step
+copy "python\lib\zfpy.pyd" "%PREFIX%\Lib\site-packages"
+copy "bin\zfp.dll" "%PREFIX%\Lib\site-packages"
 if errorlevel 1 exit 1
 
 :: Run tests
 ctest
-bin/testzfp
+bin\testzfp.exe
