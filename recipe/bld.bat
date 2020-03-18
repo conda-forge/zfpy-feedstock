@@ -12,6 +12,7 @@ cd build
 
 :: Configure using the CMakeFiles
 cmake -GNinja ^
+    -DCMAKE_BUILD_TYPE=Release ^
     -DBUILD_ZFPY=ON ^
     -DZFP_WITH_OPENMP=OFF ^
     -CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=OFF ^
