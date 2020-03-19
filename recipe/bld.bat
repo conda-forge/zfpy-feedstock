@@ -14,7 +14,7 @@ cd build
 set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
 
 :: Configure using the CMakeFiles
-cmake -GNinja ^
+cmake -G "Ninja" ^
   -DCMAKE_BUILD_TYPE=Release ^
   -DBUILD_ZFPY=ON ^
   -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%" ^
@@ -28,7 +28,7 @@ cmake -GNinja ^
   ..
 if errorlevel 1 exit 1
 
-cmake --build . --config Release --target install
+ninja install
 if errorlevel 1 exit 1
 
 popd
