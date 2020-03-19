@@ -20,6 +20,7 @@ requirements:
     - {{ compiler('cxx') }}
     - cmake
     - make # [unix]
+    - jom # [win]
   host:
     - python
     - numpy
