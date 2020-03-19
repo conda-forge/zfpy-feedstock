@@ -19,6 +19,7 @@ cmake -G "NMake Makefiles" ^
   -DBUILD_TESTING=OFF ^
   -DBUILD_SHARED_LIBS=ON ^
   -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" ^
+  -DCMAKE_PREFIX_PATH="%LIBRARY_PREFIX%" ^
   ..
 if errorlevel 1 exit 1
 
