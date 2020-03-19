@@ -11,10 +11,15 @@ set VERBOSE=1
 mkdir build
 cd build
 
+set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
+
 :: Configure using the CMakeFiles
 cmake -GNinja ^
   -DCMAKE_BUILD_TYPE=Release ^
   -DBUILD_ZFPY=ON ^
+  -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%" ^
+  -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
+  -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^
   -DZFP_WITH_OPENMP=OFF ^
   -DBUILD_TESTING=OFF ^
   -DBUILD_SHARED_LIBS=ON ^
