@@ -19,14 +19,16 @@ echo "Nmake thinks that Cmake is located at: "
 echo %BUILD_PREFIX%\Library\bin\cmake.exe 
 
 :: Configure using the CMakeFiles
-  REM -DZFP_WITH_OPENMP=OFF ^
-    REM -DBUILD_SHARED_LIBS=ON ^
+
 cmake -G "Ninja" ^
   -DCMAKE_BUILD_TYPE=Release ^
   -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%" ^
   -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
   -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^
   -DBUILD_TESTING=OFF ^
+  -DZFP_WITH_OPENMP=OFF ^
+  -DBUILD_SHARED_LIBS=ON ^
+  -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON ^
   -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" ^
   ..
 if errorlevel 1 exit 1
