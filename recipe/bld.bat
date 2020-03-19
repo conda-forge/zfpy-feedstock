@@ -15,6 +15,8 @@ set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
 
 echo "Cmake is located at: "
 where cmake
+echo "Nmake thinks that Cmake is located at: "
+echo %BUILD_PREFIX%\Library\bin\cmake.exe 
 
 :: Configure using the CMakeFiles
 cmake -G "NMake Makefiles" ^
