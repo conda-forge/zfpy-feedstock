@@ -12,7 +12,7 @@ mkdir build
 cd build
 
 :: Configure using the CMakeFiles
-cmake -G "NMake Makefiles" ^
+cmake -GNinja ^
   -DCMAKE_BUILD_TYPE=Release ^
   -DBUILD_ZFPY=ON ^
   -DZFP_WITH_OPENMP=OFF ^
@@ -23,10 +23,7 @@ cmake -G "NMake Makefiles" ^
   ..
 if errorlevel 1 exit 1
 
-nmake
-if errorlevel 1 exit 1
-
-nmake install
+cmake --build . --config Release --target install
 if errorlevel 1 exit 1
 
 popd
