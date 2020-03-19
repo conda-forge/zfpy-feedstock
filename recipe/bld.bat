@@ -14,7 +14,7 @@ cd build
 set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
 
 :: Configure using the CMakeFiles
-cmake -G "NMake Makefiles JOM" ^
+cmake -G "NMake Makefiles" ^
   -DCMAKE_BUILD_TYPE=Release ^
   -DBUILD_ZFPY=ON ^
   -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%" ^
@@ -28,7 +28,7 @@ cmake -G "NMake Makefiles JOM" ^
   ..
 if errorlevel 1 exit 1
 
-cmake --build . --target install --config Release
+nmake install /D /P
 if errorlevel 1 exit 1
 
 popd
