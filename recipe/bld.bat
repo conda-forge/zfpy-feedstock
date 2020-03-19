@@ -13,6 +13,9 @@ cd build
 
 set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
 
+echo "Cmake is located at: "
+where cmake
+
 :: Configure using the CMakeFiles
 cmake -G "NMake Makefiles" ^
   -DCMAKE_BUILD_TYPE=Release ^
