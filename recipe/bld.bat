@@ -4,7 +4,7 @@ setlocal EnableDelayedExpansion
 :: See https://github.com/conda/conda-build/issues/2850
 :: set "CXXFLAGS=%CXXFLAGS:-GL=%"
 pushd .
-set "CXXFLAGS= -MD"
+set CXXFLAGS=-MD
 set VERBOSE=1
 
 :: Make a build folder and change to it.
@@ -14,8 +14,7 @@ cd build
 set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
 
 :: Configure using the CMakeFiles
-cmake -G "Ninja" ^
-  -DCMAKE_BUILD_TYPE=Release ^
+cmake -G "%CMAKE_GENERATOR%" ^
   -DBUILD_ZFPY=ON ^
   -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%" ^
   -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
@@ -28,7 +27,7 @@ cmake -G "Ninja" ^
   ..
 if errorlevel 1 exit 1
 
-ninja install
+cmake --build . --target install --config Release
 if errorlevel 1 exit 1
 
 popd
