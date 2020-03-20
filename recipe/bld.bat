@@ -1,19 +1,41 @@
 setlocal EnableDelayedExpansion
 
-git clone https://github.com/jameskbride/cmake-hello-world.git
+:: Remove -GL from CXXFLAGS as this causes a fatal error
+:: See https://github.com/conda/conda-build/issues/2850
+:: set "CXXFLAGS=%CXXFLAGS:-GL=%"
+set "CXXFLAGS=%CXXFLAGS:-GL=%"
+set VERBOSE=1
 
-cd cmake-hello-world
+pushd .
+git clone https://github.com/LLNL/zfp.git
+
+cd zfp
 
 mkdir build
 cd build
-cmake -G "NMake Makefiles" ..
-nmake
+set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
 
-REM :: Remove -GL from CXXFLAGS as this causes a fatal error
-REM :: See https://github.com/conda/conda-build/issues/2850
-REM :: set "CXXFLAGS=%CXXFLAGS:-GL=%"
-REM set "CXXFLAGS=%CXXFLAGS:-GL=%"
-REM set VERBOSE=1
+:: Configure using the CMakeFiles
+cmake -G "Ninja" ^
+  -DCMAKE_BUILD_TYPE=Release ^
+  -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%" ^
+  -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
+  -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^
+  -DBUILD_TESTING=OFF ^
+  -DBUILD_ZFPY=ON ^
+  -DZFP_WITH_OPENMP=OFF ^
+  -DBUILD_SHARED_LIBS=ON ^
+  -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON ^
+  -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" ^
+  ..
+if errorlevel 1 exit 1
+
+cmake --build . --target install --config Release
+if errorlevel 1 exit 1
+
+popd
+
+
 
 REM :: Make a build folder and change to it.
 REM mkdir build
