@@ -23,8 +23,8 @@ requirements:
     - ninja # [win]
   host:
     - python
-    - numpy
-    - cython
+    - numpy >=1.8.0
+    - cython >=0.22
   run:
     - python
     - {{ pin_compatible('numpy') }}
