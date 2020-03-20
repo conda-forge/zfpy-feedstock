@@ -3,8 +3,7 @@ setlocal EnableDelayedExpansion
 :: Remove -GL from CXXFLAGS as this causes a fatal error
 :: See https://github.com/conda/conda-build/issues/2850
 :: set "CXXFLAGS=%CXXFLAGS:-GL=%"
-pushd .
-set CXXFLAGS=-MD
+set "CXXFLAGS=%CXXFLAGS:-GL=%"
 set VERBOSE=1
 
 :: Make a build folder and change to it.
@@ -13,13 +12,7 @@ cd build
 
 set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
 
-echo "Cmake is located at: "
-where cmake
-echo "Nmake thinks that Cmake is located at: "
-echo %BUILD_PREFIX%\Library\bin\cmake.exe 
-
 :: Configure using the CMakeFiles
-
 cmake -G "Ninja" ^
   -DCMAKE_BUILD_TYPE=Release ^
   -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%" ^
@@ -36,5 +29,3 @@ if errorlevel 1 exit 1
 
 cmake --build . --target install --config Release
 if errorlevel 1 exit 1
-
-popd
