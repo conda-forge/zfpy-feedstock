@@ -14,7 +14,7 @@ set VERBOSE=1
 set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
 
 :: Configure using the CMakeFiles
-cmake -G "Ninja" ^
+%BUILD_PREFIX%\Library\bin\cmake.exe -G "Ninja" ^
   -DCMAKE_BUILD_TYPE=Release ^
   -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%" ^
   -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
@@ -28,5 +28,5 @@ cmake -G "Ninja" ^
   %SRC_DIR%
 if errorlevel 1 exit 1
 
-cmake --build . --target install --config Release
+%BUILD_PREFIX%\Library\bin\cmake.exe --build . --target install --config Release
 if errorlevel 1 exit 1
