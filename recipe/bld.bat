@@ -13,14 +13,9 @@ cd zfp
 
 mkdir build
 cd build
-set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
 
 :: Configure using the CMakeFiles
-cmake -G "Ninja" ^
-  -DCMAKE_BUILD_TYPE=Release ^
-  -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%" ^
-  -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
-  -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^
+cmake -G "NMake Makefiles" ^
   -DBUILD_TESTING=OFF ^
   -DBUILD_ZFPY=ON ^
   -DZFP_WITH_OPENMP=OFF ^
