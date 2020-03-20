@@ -1,4 +1,5 @@
-setlocal EnableDelayedExpansion
+echo "Checking if there are multiple cmds in path"
+where cmd
 
 mkdir %SRC_DIR%\build
 cd %SRC_DIR%\build
