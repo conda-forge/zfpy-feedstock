@@ -1,5 +1,8 @@
 setlocal EnableDelayedExpansion
 
+mkdir %SRC_DIR%\build
+cd %SRC_DIR%\build
+
 :: Remove -GL from CXXFLAGS as this causes a fatal error
 :: See https://github.com/conda/conda-build/issues/2850
 :: set "CXXFLAGS=%CXXFLAGS:-GL=%"
@@ -10,7 +13,7 @@ set VERBOSE=1
 set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
 
 :: Configure using the CMakeFiles
-cmake -G "Ninja" ^
+cmake -G "%CMAKE_GENERATOR%" ^
   -DCMAKE_BUILD_TYPE=Release ^
   -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%" ^
   -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
