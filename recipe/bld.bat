@@ -6,50 +6,26 @@ setlocal EnableDelayedExpansion
 set "CXXFLAGS=%CXXFLAGS:-GL=%"
 set VERBOSE=1
 
-pushd .
-git clone https://github.com/LLNL/zfp.git
-
-cd zfp
-
+:: Make a build folder and change to it.
 mkdir build
 cd build
 
+set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
+
 :: Configure using the CMakeFiles
-cmake -G "NMake Makefiles" ^
+cmake -G "Ninja" ^
+  -DCMAKE_BUILD_TYPE=Release ^
+  -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%" ^
+  -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
+  -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^
   -DBUILD_TESTING=OFF ^
   -DBUILD_ZFPY=ON ^
   -DZFP_WITH_OPENMP=OFF ^
+  -DBUILD_SHARED_LIBS=ON ^
   -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON ^
+  -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" ^
   ..
 if errorlevel 1 exit 1
 
-cmake --build .
+cmake --build . --target install --config Release
 if errorlevel 1 exit 1
-
-popd
-
-
-
-REM :: Make a build folder and change to it.
-REM mkdir build
-REM cd build
-
-REM set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
-
-REM :: Configure using the CMakeFiles
-REM cmake -G "Ninja" ^
-REM   -DCMAKE_BUILD_TYPE=Release ^
-REM   -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%" ^
-REM   -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
-REM   -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^
-REM   -DBUILD_TESTING=OFF ^
-REM   -DBUILD_ZFPY=ON ^
-REM   -DZFP_WITH_OPENMP=OFF ^
-REM   -DBUILD_SHARED_LIBS=ON ^
-REM   -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON ^
-REM   -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" ^
-REM   ..
-REM if errorlevel 1 exit 1
-
-REM cmake --build . --target install --config Release
-REM if errorlevel 1 exit 1
