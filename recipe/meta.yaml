@@ -31,6 +31,13 @@ requirements:
     - libgomp  # [linux]
 
 test:
+  commands:
+    - test -f $PREFIX/include/zfp.h                # [linux]
+    - test -f $PREFIX/lib/libzfp.so.{{ version }}  # [linux]
+    - test -f $PREFIX/lib/libzfp${SHLIB_EXT}       # [unix]
+    # Command always returns 1
+    - which zfp  # [unix]
+    - where zfp  # [win]
   imports:
     - zfpy
 
