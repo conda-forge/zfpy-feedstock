@@ -21,14 +21,16 @@ cmake -G "NMake Makefiles"                     ^
 
 if errorlevel 1 exit 1
 
-nmake
+ninja install
 if errorlevel 1 exit 1
 
 :: Custom installation step
-copy "python\lib\zfpy.pyd" "%PREFIX%\Lib\site-packages"
-if errorlevel 1 exit 1
-copy "bin\zfp.dll" "%PREFIX%\Lib\site-packages"
-if errorlevel 1 exit 1
+REM copy "python\lib\zfpy.pyd" "%PREFIX%\Lib\site-packages"
+REM if errorlevel 1 exit 1
+REM copy "bin\zfp.dll" "%PREFIX%\Lib\site-packages"
+REM if errorlevel 1 exit 1
+
+REM command line utility not installed for some reason
 copy "bin\zfp.exe" "%LIBRARY_BIN%\."
 if errorlevel 1 exit 1
 
