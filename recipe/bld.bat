@@ -27,8 +27,8 @@ if errorlevel 1 exit 1
 :: Custom installation step
 copy "python\lib\zfpy.pyd" "%PREFIX%\Lib\site-packages"
 if errorlevel 1 exit 1
-REM copy "bin\zfp.dll" "%PREFIX%\Lib\site-packages"
-REM if errorlevel 1 exit 1
+copy "bin\zfp.dll" "%PREFIX%\Lib\site-packages"
+if errorlevel 1 exit 1
 copy "bin\zfp.exe" "%LIBRARY_BIN%\."
 if errorlevel 1 exit 1
 
