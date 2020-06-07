@@ -18,7 +18,8 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - cmake
-    - make  # [unix]
+    - make     # [unix]
+    - ninja    # [win]
     - libgomp  # [linux]
   host:
     - python
