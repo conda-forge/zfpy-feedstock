@@ -7,7 +7,7 @@ cd build
 set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
 
 :: Configure using the CMakeFiles
-cmake -G "NMake Makefiles"                     ^
+cmake -G "Ninja"                               ^
   -DBUILD_ZFPY=ON                              ^
   -DBUILD_UTILITIES=ON                         ^
   -DBUILD_CFP=ON                               ^
