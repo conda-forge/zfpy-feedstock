@@ -9,10 +9,9 @@ source:
   sha256: 6a7f4934489087d9c117a4af327fd6495ea757924f4df467b9c537abf8bd86c4
 
 build:
-  number: 0
+  number: 1
   rpaths:
     - lib/  # [unix]
-    - lib64/  # [unix]
 
 requirements:
   build:
@@ -20,13 +19,16 @@ requirements:
     - {{ compiler('cxx') }}
     - cmake
     - make  # [unix]
+    - libgomp  # [linux]
   host:
     - python
     - numpy
     - cython
+    - libgomp  # [linux]
   run:
     - python
     - {{ pin_compatible('numpy') }}
+    - libgomp  # [linux]
 
 test:
   imports:
