@@ -4,8 +4,6 @@ setlocal EnableDelayedExpansion
 mkdir build
 cd build
 
-set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
-
 :: Configure using the CMakeFiles
 cmake -G "Ninja"                               ^
   -DBUILD_ZFPY=ON                              ^
@@ -13,10 +11,6 @@ cmake -G "Ninja"                               ^
   -DBUILD_CFP=ON                               ^
   -DZFP_WITH_OPENMP=OFF                        ^
   -DCMAKE_BUILD_TYPE:STRING=Release            ^
-  -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%"      ^
-  -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^
-  -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
-  -DCMAKE_INSTALL_PREFIX="%PREFIX%"            ^
   ..
 
 if errorlevel 1 exit 1
