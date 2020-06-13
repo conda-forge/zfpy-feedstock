@@ -18,6 +18,7 @@ cmake                              \
   -DCMAKE_INSTALL_PREFIX=${PREFIX} \
   -DCMAKE_PREFIX_PATH=${PREFIX}    \
   -DCMAKE_INSTALL_LIBDIR=lib       \
+  -DPython_ROOT_DIR=${PREFIX}      \
   ..
 
 make -j${CPU_COUNT}
