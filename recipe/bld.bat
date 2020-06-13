@@ -17,7 +17,7 @@ cmake -G "Ninja"                               ^
   -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^
   -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
   -DCMAKE_INSTALL_PREFIX="%PREFIX%"            ^
-  -Dpython_install_lib_dir=%SP_DIR%            ^
+  -DPython_ROOT_DIR=%PREFIX%                   ^
   ..
 
 if errorlevel 1 exit 1
