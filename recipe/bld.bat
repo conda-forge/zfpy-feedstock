@@ -18,6 +18,7 @@ cmake -G "Ninja"                               ^
   -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
   -DCMAKE_INSTALL_PREFIX="%PREFIX%"            ^
   -DPython_ROOT_DIR=%PREFIX%                   ^
+  -DPython_FIND_VIRTUALENV=ONLY                ^
   ..
 
 if errorlevel 1 exit 1
