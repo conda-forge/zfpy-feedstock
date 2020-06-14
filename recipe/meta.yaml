@@ -34,9 +34,12 @@ requirements:
 
 test:
   commands:
-    - test -f $PREFIX/include/zfp.h                # [linux]
+    - test -f $PREFIX/include/zfp.h                # [unix]
+    - if not exist %LIBRARY_INC%\zfp.h             # [win]
     - test -f $PREFIX/lib/libzfp.so.{{ version }}  # [linux]
     - test -f $PREFIX/lib/libzfp${SHLIB_EXT}       # [unix]
+    - if not exist %LIBRARY_BIN%\zfp.dll           # [win]
+    - if not exist %LIBRARY_LIB%\zfp.lib           # [win]
     # Command always returns 1
     - which zfp  # [unix]
     - where zfp  # [win]
