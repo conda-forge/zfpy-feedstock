@@ -16,7 +16,7 @@ cmake -G "Ninja"                               ^
   -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%"      ^
   -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^
   -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
-  -DCMAKE_INSTALL_PREFIX="%LIBRARY%"           ^
+  -DCMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%"    ^
   -DPython_ROOT_DIR=%PREFIX%                   ^
   -DPython_FIND_VIRTUALENV=ONLY                ^
   ..
