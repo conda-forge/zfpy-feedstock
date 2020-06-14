@@ -5,7 +5,7 @@ if [ "${SHORT_OS_STR:0:5}" == "Linux" ]; then
     OPENMP="-DZFP_WITH_OPENMP=1"
 fi
 if [ "${SHORT_OS_STR}" == "Darwin" ]; then
-    OPENMP=""
+    OPENMP="-DZFP_WITH_OPENMP=0"
 fi
 
 mkdir build
