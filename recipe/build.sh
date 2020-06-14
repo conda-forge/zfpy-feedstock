@@ -18,7 +18,6 @@ cmake                              \
   -DCMAKE_INSTALL_PREFIX=${PREFIX} \
   -DCMAKE_PREFIX_PATH=${PREFIX}    \
   -DCMAKE_INSTALL_LIBDIR=lib       \
-  -DPython_ROOT=${PREFIX}          \
   -DPython_ROOT_DIR=${PREFIX}      \
   -DPython_FIND_VIRTUALENV=ONLY    \
   ..
