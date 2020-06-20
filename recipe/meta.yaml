@@ -9,7 +9,7 @@
 # of zfp
 
 package:
-  name: zfpy
+  name: zfp
   version: {{ version }}
 
 source:
