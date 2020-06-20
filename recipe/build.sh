@@ -12,14 +12,12 @@ mkdir build
 cd build
 cmake                              \
   -DBUILD_CFP=ON                   \
-  -DBUILD_ZFPY=ON                  \
   -DBUILD_UTILITIES=ON             \
+  -DBUILD_ZFPY=OFF                 \
   ${OPENMP}                        \
   -DCMAKE_INSTALL_PREFIX=${PREFIX} \
   -DCMAKE_PREFIX_PATH=${PREFIX}    \
   -DCMAKE_INSTALL_LIBDIR=lib       \
-  -DPython_ROOT_DIR=${PREFIX}      \
-  -DPython_FIND_VIRTUALENV=ONLY    \
   ..
 
 make -j${CPU_COUNT}

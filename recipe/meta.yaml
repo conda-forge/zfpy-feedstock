@@ -1,7 +1,15 @@
 {% set version = "0.5.5" %}
 
+# This package builds 2 outputs
+#    zfp     --- C headers, and python site-packages
+#    zfpy    --- Depends on python + numpy
+#
+# This keeps the recipe simpler than building the python
+# packages in isolation given the current knowledge of the build system
+# of zfp
+
 package:
-  name: zfpy
+  name: zfp
   version: {{ version }}
 
 source:
@@ -14,7 +22,7 @@ build:
   number: 1
   run_exports:
     # No real information, for now, let keep the defaults
-    - {{ pin_subpackage('zfpy') }}
+    - {{ pin_subpackage('zfp') }}
   rpaths:
     - lib/  # [unix]
 
@@ -27,13 +35,7 @@ requirements:
     - ninja    # [win]
     - libgomp  # [linux]
   host:
-    - python
-    - numpy
-    - cython
     - libgomp  # [linux]
-  run:
-    - python
-    - {{ pin_compatible('numpy') }}
 
 test:
   commands:
@@ -46,8 +48,25 @@ test:
     # Command always returns 1
     - which zfp  # [unix]
     - where zfp  # [win]
-  imports:
-    - zfpy
+
+outputs:
+  - name: zfp
+  - name: zfpy
+    build:
+      script: build_zfpy.sh  # [unix]
+      script: bld_zfpy.bat   # [unix]
+    requirements:
+      host:
+        - python
+        - numpy
+        - cython
+      run:
+        - python
+        - {{ pin_compatible('numpy') }}
+        - {{ pin_subpackage('zfp', exact=True) }}
+    tests:
+      imports:
+        - zfpy
 
 about:
   home: https://computation.llnl.gov/projects/floating-point-compression
