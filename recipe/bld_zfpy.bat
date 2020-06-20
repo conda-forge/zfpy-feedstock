@@ -1,18 +1,23 @@
 setlocal EnableDelayedExpansion
 
-cd python
+del /F/Q/S build
 
 :: Make a build folder and change to it.
 mkdir build
 cd build
 
-set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib 
+set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
 
+:: hmaarrfk: 2020/06/20
+:: Basically, this build is going to reinstall the C libraries
+:: we already compiled before
+:: but since the build is identical, conda will not find the newly compiled
+:: libraries, and just keep using the old ons
 :: Configure using the CMakeFiles
 cmake -G "Ninja"                               ^
   -DBUILD_ZFPY=ON                              ^
-  -DBUILD_UTILITIES=OFF                        ^
-  -DBUILD_CFP=OFF                              ^
+  -DBUILD_UTILITIES=ON                         ^
+  -DBUILD_CFP=ON                               ^
   -DZFP_WITH_OPENMP=OFF                        ^
   -DCMAKE_BUILD_TYPE:STRING=Release            ^
   -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%"      ^

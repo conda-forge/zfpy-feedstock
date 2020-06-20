@@ -7,6 +7,10 @@
 # This keeps the recipe simpler than building the python
 # packages in isolation given the current knowledge of the build system
 # of zfp
+#
+# The build procedure actually rebuilds zfp when zfpy is being built
+# during the install phase, conda will simply ignore all the files
+# that are being copied related to zfp since they already exist in the prefix
 
 package:
   name: zfp
