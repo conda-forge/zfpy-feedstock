@@ -30,7 +30,7 @@ outputs:
   - name: zfpy
     build:
       script: source ${RECIPE_DIR}/build_zfpy.sh  # [unix]
-      script: bld_zfpy.bat   # [win]
+      script: %RECIPE_DIR%\bld_zfpy.bat       # [win]
     requirements:
       build:
         - {{ compiler('c') }}
@@ -55,7 +55,7 @@ outputs:
   - name: zfp
     build:
       script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
-      script: bld_zfp.bat   # [win]
+      script: %RECIPE_DIR%\bld_zfp.bat       # [win]
       run_exports:
         # No real information, for now, let keep the defaults
         - {{ pin_subpackage('zfp') }}
