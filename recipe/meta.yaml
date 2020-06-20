@@ -33,9 +33,9 @@ requirements:
     run:
       - python
       - {{ pin_compatible('numpy') }}
-  tests:
-    imports:
-      - zfpy
+test:
+  imports:
+    - zfpy
 
 outputs:
   - name: zfpy
