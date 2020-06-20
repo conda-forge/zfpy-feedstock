@@ -20,53 +20,56 @@ source:
 
 build:
   number: 1
-  run_exports:
-    # No real information, for now, let keep the defaults
-    - {{ pin_subpackage('zfp') }}
-  rpaths:
-    - lib/  # [unix]
+  script: build_zfpy.sh  # [unix]
+  script: bld_zfpy.bat   # [win]
 
 requirements:
-  build:
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
-    - cmake
-    - make     # [unix]
-    - ninja    # [win]
-    - libgomp  # [linux]
-  host:
-    - libgomp  # [linux]
-
-test:
-  commands:
-    - test -f $PREFIX/include/zfp.h                # [unix]
-    - if not exist %LIBRARY_INC%\zfp.h exit 1      # [win]
-    - test -f $PREFIX/lib/libzfp.so.{{ version }}  # [linux]
-    - test -f $PREFIX/lib/libzfp${SHLIB_EXT}       # [unix]
-    - if not exist %LIBRARY_BIN%\zfp.dll exit 1    # [win]
-    - if not exist %LIBRARY_LIB%\zfp.lib exit 1    # [win]
-    # Command always returns 1
-    - which zfp  # [unix]
-    - where zfp  # [win]
+  requirements:
+    host:
+      - python
+      - numpy
+      - cython
+    run:
+      - python
+      - {{ pin_compatible('numpy') }}
+      - {{ pin_subpackage('zfp', exact=True) }}
+  tests:
+    imports:
+      - zfpy
 
 outputs:
-  - name: zfp
   - name: zfpy
+  - name: zfp
     build:
-      script: build_zfpy.sh  # [unix]
-      script: bld_zfpy.bat   # [win]
+      script: build_zfp.py  # [unix]
+      script: bld_zfp.bat   # [win]
+      run_exports:
+        # No real information, for now, let keep the defaults
+        - {{ pin_subpackage('zfp') }}
+      rpaths:
+        - lib/  # [unix]
     requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - cmake
+        - make     # [unix]
+        - ninja    # [win]
+        - libgomp  # [linux]
       host:
-        - python
-        - numpy
-        - cython
-      run:
-        - python
-        - {{ pin_compatible('numpy') }}
-        - {{ pin_subpackage('zfp', exact=True) }}
-    tests:
-      imports:
-        - zfpy
+        - libgomp  # [linux]
+
+    test:
+      commands:
+        - test -f $PREFIX/include/zfp.h                # [unix]
+        - if not exist %LIBRARY_INC%\zfp.h exit 1      # [win]
+        - test -f $PREFIX/lib/libzfp.so.{{ version }}  # [linux]
+        - test -f $PREFIX/lib/libzfp${SHLIB_EXT}       # [unix]
+        - if not exist %LIBRARY_BIN%\zfp.dll exit 1    # [win]
+        - if not exist %LIBRARY_LIB%\zfp.lib exit 1    # [win]
+        # Command always returns 1
+        - which zfp  # [unix]
+        - where zfp  # [win]
 
 about:
   home: https://computation.llnl.gov/projects/floating-point-compression
