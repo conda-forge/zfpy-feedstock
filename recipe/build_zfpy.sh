@@ -1,5 +1,3 @@
-cd python
-
 mkdir build
 cd build
 cmake                              \

@@ -54,7 +54,7 @@ outputs:
   - name: zfpy
     build:
       script: build_zfpy.sh  # [unix]
-      script: bld_zfpy.bat   # [unix]
+      script: bld_zfpy.bat   # [win]
     requirements:
       host:
         - python
