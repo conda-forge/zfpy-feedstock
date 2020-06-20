@@ -9,7 +9,7 @@
 # of zfp
 
 package:
-  name: zfp
+  name: zfpy
   version: {{ version }}
 
 source:
@@ -29,10 +29,10 @@ requirements:
       - python
       - numpy
       - cython
+      - {{ pin_subpackage('zfp', exact=True) }}
     run:
       - python
       - {{ pin_compatible('numpy') }}
-      - {{ pin_subpackage('zfp', exact=True) }}
   tests:
     imports:
       - zfpy
@@ -41,7 +41,7 @@ outputs:
   - name: zfpy
   - name: zfp
     build:
-      script: build_zfp.py  # [unix]
+      script: build_zfp.sh  # [unix]
       script: bld_zfp.bat   # [win]
       run_exports:
         # No real information, for now, let keep the defaults
