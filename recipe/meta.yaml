@@ -20,7 +20,7 @@ source:
 
 build:
   number: 1
-  script: build_zfpy.sh  # [unix]
+  script: source build_zfpy.sh  # [unix]
   script: bld_zfpy.bat   # [win]
 
 requirements:
@@ -41,7 +41,7 @@ outputs:
   - name: zfpy
   - name: zfp
     build:
-      script: build_zfp.sh  # [unix]
+      script: source build_zfp.sh  # [unix]
       script: bld_zfp.bat   # [win]
       run_exports:
         # No real information, for now, let keep the defaults
