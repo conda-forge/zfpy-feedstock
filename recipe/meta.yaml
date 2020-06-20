@@ -42,9 +42,12 @@ outputs:
       run:
         - python
         - {{ pin_compatible('numpy') }}
+        # I don't think run exports work with pin exact subpackage
+        - {{ pin_subpackage('zfp', exact=True) }}
     test:
       imports:
         - zfpy
+
   - name: zfp
     build:
       script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
