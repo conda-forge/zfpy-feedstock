@@ -24,21 +24,20 @@ build:
   script: bld_zfpy.bat   # [win]
 
 requirements:
-  requirements:
-    build:
-      - {{ compiler('c') }}
-      - {{ compiler('cxx') }}
-      - cmake
-      - make     # [unix]
-      - ninja    # [win]
-    host:
-      - python
-      - numpy
-      - cython
-      - {{ pin_subpackage('zfp', exact=True) }}
-    run:
-      - python
-      - {{ pin_compatible('numpy') }}
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake
+    - make     # [unix]
+    - ninja    # [win]
+  host:
+    - python
+    - numpy
+    - cython
+    - {{ pin_subpackage('zfp', exact=True) }}
+  run:
+    - python
+    - {{ pin_compatible('numpy') }}
 test:
   imports:
     - zfpy
