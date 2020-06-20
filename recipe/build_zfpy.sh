@@ -7,6 +7,7 @@ if [ "${SHORT_OS_STR}" == "Darwin" ]; then
     OPENMP="-DZFP_WITH_OPENMP=0"
 fi
 
+rm -rf build
 mkdir build
 cd build
 cmake                              \
