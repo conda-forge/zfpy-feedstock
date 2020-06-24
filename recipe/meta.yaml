@@ -1,36 +1,82 @@
 {% set version = "0.5.5" %}
 
+# This package builds 2 outputs
+#    zfp     --- C headers
+#    zfpy    --- Python package
+#
+# The build procedure actually rebuilds zfp when zfpy is being built
+# during the install phase, conda will simply ignore all the files
+# that are being copied related to zfp since they already exist in the prefix
+
 package:
-  name: zfpy
+  name: zfp
   version: {{ version }}
 
 source:
   url: https://github.com/LLNL/zfp/archive/{{ version }}.tar.gz
   sha256: 6a7f4934489087d9c117a4af327fd6495ea757924f4df467b9c537abf8bd86c4
+  patches:
+    - 100-update-cmake.patch
 
 build:
-  number: 0
+  number: 1
+  script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
+  script: {{ RECIPE_DIR }}\bld_zfp.bat       # [win]
+  run_exports:
+    # No real information, for now, let keep the defaults
+    - {{ pin_subpackage('zfp') }}
   rpaths:
     - lib/  # [unix]
-    - lib64/  # [unix]
 
 requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - cmake
-    - make  # [unix]
+    - make     # [unix]
+    - ninja    # [win]
+    - libgomp  # [linux]
   host:
-    - python
-    - numpy
-    - cython
-  run:
-    - python
-    - {{ pin_compatible('numpy') }}
+    - libgomp  # [linux]
 
 test:
-  imports:
-    - zfpy
+  commands:
+    - test -f $PREFIX/include/zfp.h                # [unix]
+    - if not exist %LIBRARY_INC%\zfp.h exit 1      # [win]
+    - test -f $PREFIX/lib/libzfp.so.{{ version }}  # [linux]
+    - test -f $PREFIX/lib/libzfp${SHLIB_EXT}       # [unix]
+    - if not exist %LIBRARY_BIN%\zfp.dll exit 1    # [win]
+    - if not exist %LIBRARY_LIB%\zfp.lib exit 1    # [win]
+    # Command always returns 1
+    - which zfp  # [unix]
+    - where zfp  # [win]
+
+outputs:
+  - name: zfp
+  - name: zfpy
+    build:
+      script: source ${RECIPE_DIR}/build_zfpy.sh  # [unix]
+      script: {{ RECIPE_DIR }}\bld_zfpy.bat       # [win]
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - cmake
+        - make     # [unix]
+        - ninja    # [win]
+      host:
+        - python
+        - numpy
+        - cython
+        - {{ pin_subpackage('zfp', exact=True) }}
+      run:
+        - python
+        - {{ pin_compatible('numpy') }}
+        # I don't think run exports work with pin exact subpackage
+        - {{ pin_subpackage('zfp', exact=True) }}
+    test:
+      imports:
+        - zfpy
 
 about:
   home: https://computation.llnl.gov/projects/floating-point-compression
@@ -54,3 +100,4 @@ extra:
     - ToreAad
     - lindstro
     - GarrettDMorrison
+    - hmaarrfk

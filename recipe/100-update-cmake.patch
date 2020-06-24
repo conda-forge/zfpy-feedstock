@@ -1,0 +1,29 @@
+From 1e6ad1a0a41df9d2f057762b8dbd318ce3e796ce Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Sat, 13 Jun 2020 12:04:22 -0700
+Subject: [PATCH] Use correct installation directory on windows with modern
+ CMake
+
+---
+ python/CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
+index 76f93173..904738ed 100644
+--- a/python/CMakeLists.txt
++++ b/python/CMakeLists.txt
+@@ -9,6 +9,7 @@ find_package(PythonLibs REQUIRED)
+ find_package(PythonExtensions REQUIRED)
+ find_package(Cython REQUIRED)
+ find_package(NumPy REQUIRED)
++find_package(Python REQUIRED)
+ 
+ include_directories(${ZFP_SOURCE_DIR}/include)
+ include_directories(${PYTHON_NUMPY_INCLUDE_DIR})
+@@ -22,5 +23,4 @@ python_extension_module(zfpy)
+ set(PYLIB_BUILD_DIR "${CMAKE_BINARY_DIR}/bin" CACHE PATH "Directory where zfp python library will be built")
+ set_target_properties(zfpy PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PYLIB_BUILD_DIR})
+ # Install to the typical python module directory
+-set(python_install_lib_dir "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/")
+-install(TARGETS zfpy LIBRARY DESTINATION ${python_install_lib_dir})
++install(TARGETS zfpy LIBRARY DESTINATION ${Python_SITELIB})
