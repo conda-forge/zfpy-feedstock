@@ -1,12 +1,8 @@
 {% set version = "0.5.5" %}
 
 # This package builds 2 outputs
-#    zfp     --- C headers, and python site-packages
-#    zfpy    --- Depends on python + numpy
-#
-# This keeps the recipe simpler than building the python
-# packages in isolation given the current knowledge of the build system
-# of zfp
+#    zfp     --- C headers
+#    zfpy    --- Python package
 #
 # The build procedure actually rebuilds zfp when zfpy is being built
 # during the install phase, conda will simply ignore all the files
@@ -104,3 +100,4 @@ extra:
     - ToreAad
     - lindstro
     - GarrettDMorrison
+    - hmaarrfk
