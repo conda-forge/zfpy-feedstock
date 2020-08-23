@@ -17,6 +17,7 @@ cmake                              \
   -DCMAKE_INSTALL_PREFIX=${PREFIX} \
   -DCMAKE_PREFIX_PATH=${PREFIX}    \
   -DCMAKE_INSTALL_LIBDIR=lib       \
+  -DBUILD_ZFPY=OFF                 \
   ..
 
 make -j${CPU_COUNT}
