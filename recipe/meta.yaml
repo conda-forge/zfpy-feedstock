@@ -32,7 +32,7 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - cmake  3.17
+    - cmake
     - make     # [unix]
     - ninja    # [win]
     - libgomp  # [linux]
@@ -61,7 +61,7 @@ outputs:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - cmake 3.17
+        - cmake
         - make     # [unix]
         - ninja    # [win]
       host:
