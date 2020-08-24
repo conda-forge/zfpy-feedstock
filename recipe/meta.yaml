@@ -61,7 +61,7 @@ outputs:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - cmake
+        - cmake 3.17
         - make     # [unix]
         - ninja    # [win]
       host:
