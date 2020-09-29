@@ -19,7 +19,7 @@ source:
     - 100-update-cmake.patch
 
 build:
-  number: 1
+  number: 2
   script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
   script: {{ RECIPE_DIR }}\bld_zfp.bat       # [win]
   run_exports:
@@ -36,17 +36,18 @@ requirements:
     - make     # [unix]
     - ninja    # [win]
     - libgomp  # [linux]
-  host:
-    - libgomp  # [linux]
+    - llvm-openmp  # [osx]
 
 test:
   commands:
     - test -f $PREFIX/include/zfp.h                # [unix]
+    - test -f ${PREFIX}/lib/cmake/zfp/zfp-config.cmake  # [unix]
     - if not exist %LIBRARY_INC%\zfp.h exit 1      # [win]
     - test -f $PREFIX/lib/libzfp.so.{{ version }}  # [linux]
     - test -f $PREFIX/lib/libzfp${SHLIB_EXT}       # [unix]
     - if not exist %LIBRARY_BIN%\zfp.dll exit 1    # [win]
     - if not exist %LIBRARY_LIB%\zfp.lib exit 1    # [win]
+    - if not exist %LIBRARY_PREFIX%\lib\cmake\zfp\zfp-config.cmake exit 1  # [win]
     # Command always returns 1
     - which zfp  # [unix]
     - where zfp  # [win]
@@ -80,7 +81,7 @@ outputs:
 
 about:
   home: https://computation.llnl.gov/projects/floating-point-compression
-  license: BSD 3-Clause Modified
+  license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE
   summary: 'Library for compressed numerical arrays that support high throughput read and write random access'
