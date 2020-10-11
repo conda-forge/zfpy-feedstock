@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7c51ae6..e46b856 100644
+index a345b4c..c64f826 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,8 +1,4 @@
@@ -13,10 +13,10 @@ index 7c51ae6..e46b856 100644
  # Fail immediately if not using an out-of-source build
  if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR)
 diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
-index 76f9317..681acee 100644
+index 76f9317..ce26239 100644
 --- a/python/CMakeLists.txt
 +++ b/python/CMakeLists.txt
-@@ -1,14 +1,9 @@
+@@ -1,14 +1,8 @@
  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/scikit-build-cmake)
  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/eyescale-cmake)
 -include(UseCython)
@@ -25,17 +25,69 @@ index 76f9317..681acee 100644
  
 -find_package(PythonInterp REQUIRED)
 -find_package(PythonLibs REQUIRED)
+-find_package(PythonExtensions REQUIRED)
 +find_package(Python COMPONENTS Interpreter Development NumPy REQUIRED)
- find_package(PythonExtensions REQUIRED)
  find_package(Cython REQUIRED)
 -find_package(NumPy REQUIRED)
  
  include_directories(${ZFP_SOURCE_DIR}/include)
  include_directories(${PYTHON_NUMPY_INCLUDE_DIR})
-@@ -22,5 +17,4 @@ python_extension_module(zfpy)
+@@ -22,5 +16,4 @@ python_extension_module(zfpy)
  set(PYLIB_BUILD_DIR "${CMAKE_BINARY_DIR}/bin" CACHE PATH "Directory where zfp python library will be built")
  set_target_properties(zfpy PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PYLIB_BUILD_DIR})
  # Install to the typical python module directory
 -set(python_install_lib_dir "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/")
 -install(TARGETS zfpy LIBRARY DESTINATION ${python_install_lib_dir})
 +install(TARGETS zfpy LIBRARY DESTINATION ${Python_SITELIB})
+diff --git a/python/scikit-build-cmake/FindCython.cmake b/python/scikit-build-cmake/FindCython.cmake
+index 3d58c4f..c8ae38a 100644
+--- a/python/scikit-build-cmake/FindCython.cmake
++++ b/python/scikit-build-cmake/FindCython.cmake
+@@ -36,9 +36,16 @@
+ 
+ # Use the Cython executable that lives next to the Python executable
+ # if it is a local installation.
+-find_package(PythonInterp)
+-if(PYTHONINTERP_FOUND)
+-  get_filename_component(_python_path ${PYTHON_EXECUTABLE} PATH)
++if(${CMAKE_VERSION} VERSION_LESS "3.18.0") 
++    # Backward compatibility with older version of cmake before pypy support
++    find_package(PythonInterp)
++    set(Python_Interpreter_FOUND ${PYTHONINTERP_FOUND})
++    set(Python_EXECUTABLE ${PYTHON_EXECUTABLE})
++else()
++    find_package(Python COMPONENTS Interpreter)
++endif()
++if(Python_Interpreter_FOUND)
++  get_filename_component(_python_path ${Python_EXECUTABLE} PATH)
+   find_program(CYTHON_EXECUTABLE
+                NAMES cython cython.bat cython3
+                HINTS ${_python_path}
+diff --git a/python/scikit-build-cmake/UseCython.cmake b/python/scikit-build-cmake/UseCython.cmake
+index 9a59664..75ca85c 100644
+--- a/python/scikit-build-cmake/UseCython.cmake
++++ b/python/scikit-build-cmake/UseCython.cmake
+@@ -103,7 +103,13 @@ set(CYTHON_FLAGS "" CACHE STRING
+ mark_as_advanced(CYTHON_ANNOTATE CYTHON_FLAGS)
+ string(REGEX REPLACE " " ";" CYTHON_FLAGS_LIST "${CYTHON_FLAGS}")
+ 
+-find_package(PythonLibs REQUIRED)
++if
++if(${CMAKE_VERSION} VERSION_LESS "3.18.0")
++    find_package(PythonLibs REQUIRED)
++    set(Python_VERSION ${PYTHONLIBS_VERSION_STRING})
++else()
++    find_package(Python COMPONENTS Development REQUIRED)
++endif()
+ 
+ set(CYTHON_CXX_EXTENSION "cxx")
+ set(CYTHON_C_EXTENSION "c")
+@@ -138,7 +144,7 @@ function(add_cython_target _name)
+ 
+   set(_embed_main FALSE)
+ 
+-  if("${PYTHONLIBS_VERSION_STRING}" MATCHES "^2.")
++  if("${Python_VERSION}" MATCHES "^2.")
+     set(_input_syntax "PY2")
+   else()
+     set(_input_syntax "PY3")

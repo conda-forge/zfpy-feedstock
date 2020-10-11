@@ -13,10 +13,6 @@ cd build
 
 ${PYTHON} --version
 
-EXTRA_FLAGS=
-if [[ `${PYTHON} --version | grep PyPy | wc -l` == 1 ]]; then
-    EXTRA_FLAGS="-DPYTHON_LIBRARY=${PREFIX}/lib/libpypy3-c.so"
-fi
 cmake                              \
   -DBUILD_CFP=ON                   \
   -DBUILD_UTILITIES=ON             \
@@ -26,7 +22,6 @@ cmake                              \
   -DPython_ROOT_DIR=${PREFIX}      \
   -DPython_FIND_VIRTUALENV=ONLY    \
   -DCMAKE_INSTALL_LIBDIR=lib       \
-  ${EXTRA_FLAGS}                   \
   ..
 
 make
