@@ -40,7 +40,7 @@ index 76f9317..ce26239 100644
 -install(TARGETS zfpy LIBRARY DESTINATION ${python_install_lib_dir})
 +install(TARGETS zfpy LIBRARY DESTINATION ${Python_SITELIB})
 diff --git a/python/scikit-build-cmake/FindCython.cmake b/python/scikit-build-cmake/FindCython.cmake
-index 3d58c4f..c8ae38a 100644
+index 3d58c4f..61c95ea 100644
 --- a/python/scikit-build-cmake/FindCython.cmake
 +++ b/python/scikit-build-cmake/FindCython.cmake
 @@ -36,9 +36,16 @@
@@ -50,7 +50,7 @@ index 3d58c4f..c8ae38a 100644
 -find_package(PythonInterp)
 -if(PYTHONINTERP_FOUND)
 -  get_filename_component(_python_path ${PYTHON_EXECUTABLE} PATH)
-+if(${CMAKE_VERSION} VERSION_LESS "3.18.0") 
++if(${CMAKE_VERSION} VERSION_LESS "3.18.0")
 +    # Backward compatibility with older version of cmake before pypy support
 +    find_package(PythonInterp)
 +    set(Python_Interpreter_FOUND ${PYTHONINTERP_FOUND})
@@ -64,15 +64,14 @@ index 3d58c4f..c8ae38a 100644
                 NAMES cython cython.bat cython3
                 HINTS ${_python_path}
 diff --git a/python/scikit-build-cmake/UseCython.cmake b/python/scikit-build-cmake/UseCython.cmake
-index 9a59664..75ca85c 100644
+index 9a59664..8aaa65a 100644
 --- a/python/scikit-build-cmake/UseCython.cmake
 +++ b/python/scikit-build-cmake/UseCython.cmake
-@@ -103,7 +103,13 @@ set(CYTHON_FLAGS "" CACHE STRING
+@@ -103,7 +103,12 @@ set(CYTHON_FLAGS "" CACHE STRING
  mark_as_advanced(CYTHON_ANNOTATE CYTHON_FLAGS)
  string(REGEX REPLACE " " ";" CYTHON_FLAGS_LIST "${CYTHON_FLAGS}")
  
 -find_package(PythonLibs REQUIRED)
-+if
 +if(${CMAKE_VERSION} VERSION_LESS "3.18.0")
 +    find_package(PythonLibs REQUIRED)
 +    set(Python_VERSION ${PYTHONLIBS_VERSION_STRING})
@@ -82,7 +81,7 @@ index 9a59664..75ca85c 100644
  
  set(CYTHON_CXX_EXTENSION "cxx")
  set(CYTHON_C_EXTENSION "c")
-@@ -138,7 +144,7 @@ function(add_cython_target _name)
+@@ -138,7 +143,7 @@ function(add_cython_target _name)
  
    set(_embed_main FALSE)
  
