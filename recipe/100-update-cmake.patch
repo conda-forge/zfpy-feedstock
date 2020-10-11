@@ -63,6 +63,110 @@ index 3d58c4f..61c95ea 100644
    find_program(CYTHON_EXECUTABLE
                 NAMES cython cython.bat cython3
                 HINTS ${_python_path}
+diff --git a/python/scikit-build-cmake/FindPythonExtensions.cmake b/python/scikit-build-cmake/FindPythonExtensions.cmake
+index 9a3d76a..d0526b9 100644
+--- a/python/scikit-build-cmake/FindPythonExtensions.cmake
++++ b/python/scikit-build-cmake/FindPythonExtensions.cmake
+@@ -243,8 +243,17 @@
+ # limitations under the License.
+ #=============================================================================
+ 
+-find_package(PythonInterp REQUIRED)
+-find_package(PythonLibs)
++if(${CMAKE_VERSION} VERSION_LESS "3.18.0")
++    find_package(PythonInterp REQUIRED)
++    find_package(PythonLibs)
++    set(Python_VERSION ${PYTHONLIBS_VERSION_STRING})
++    set(Python_EXECUTABLE ${PYTHON_EXECUTABLE})
++    set(Python_VERSION_MAJOR ${PYTHON_VERSION_MAJOR})
++    set(Python_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
++    set(Python_LIBRARIES ${PYTHON_LIBRARIES})
++else()
++    find_package(Python COMPONENTS Interpreter Development REQUIRED)
++endif()
+ include(targetLinkLibrariesWithDynamicLookup)
+ 
+ set(_command "
+@@ -292,37 +301,37 @@ sys.stdout.write(\";\".join((
+ )))
+ ")
+ 
+-execute_process(COMMAND "${PYTHON_EXECUTABLE}" -c "${_command}"
++execute_process(COMMAND "${Python_EXECUTABLE}" -c "${_command}"
+                 OUTPUT_VARIABLE _list
+                 RESULT_VARIABLE _result)
+ 
+ list(GET _list 0 _item)
+-set(PYTHON_SEPARATOR "${_item}")
+-mark_as_advanced(PYTHON_SEPARATOR)
++set(Python_SEPARATOR "${_item}")
++mark_as_advanced(Python_SEPARATOR)
+ 
+ list(GET _list 1 _item)
+-set(PYTHON_PATH_SEPARATOR "${_item}")
+-mark_as_advanced(PYTHON_PATH_SEPARATOR)
++set(Python_PATH_SEPARATOR "${_item}")
++mark_as_advanced(Python_PATH_SEPARATOR)
+ 
+ list(GET _list 2 _item)
+-set(PYTHON_PREFIX "${_item}")
+-mark_as_advanced(PYTHON_PREFIX)
++set(Python_PREFIX "${_item}")
++mark_as_advanced(Python_PREFIX)
+ 
+ list(GET _list 3 _item)
+-set(PYTHON_SITE_PACKAGES_DIR "${_item}")
++set(Python_SITE_PACKAGES_DIR "${_item}")
+ mark_as_advanced(PYTHON_SITE_PACKAGES_DIR)
+ 
+ list(GET _list 4 _item)
+-set(PYTHON_RELATIVE_SITE_PACKAGES_DIR "${_item}")
+-mark_as_advanced(PYTHON_RELATIVE_SITE_PACKAGES_DIR)
++set(Python_RELATIVE_SITE_PACKAGES_DIR "${_item}")
++mark_as_advanced(Python_RELATIVE_SITE_PACKAGES_DIR)
+ 
+-if(NOT DEFINED PYTHON_EXTENSION_MODULE_SUFFIX)
++if(NOT DEFINED Python_EXTENSION_MODULE_SUFFIX)
+   list(GET _list 5 _item)
+-  set(PYTHON_EXTENSION_MODULE_SUFFIX "${_item}")
++  set(Python_EXTENSION_MODULE_SUFFIX "${_item}")
+ endif()
+ 
+ function(_set_python_extension_symbol_visibility _target)
+-  if(PYTHON_VERSION_MAJOR VERSION_GREATER 2)
++  if(Python_VERSION_MAJOR VERSION_GREATER 2)
+     set(_modinit_prefix "PyInit_")
+   else()
+     set(_modinit_prefix "init")
+@@ -395,7 +404,7 @@ function(python_extension_module _target)
+   endif()
+ 
+   if(NOT _is_non_lib)
+-    include_directories("${PYTHON_INCLUDE_DIRS}")
++    include_directories("${Python_INCLUDE_DIRS}")
+   endif()
+ 
+   if(_is_module_lib)
+@@ -420,7 +429,7 @@ function(python_extension_module _target)
+       endif()
+     endif()
+ 
+-    target_link_libraries_with_dynamic_lookup(${_target} ${PYTHON_LIBRARIES})
++    target_link_libraries_with_dynamic_lookup(${_target} ${Python_LIBRARIES})
+ 
+     if(_is_module_lib)
+       #_set_python_extension_symbol_visibility(${_altname})
+@@ -429,8 +438,8 @@ function(python_extension_module _target)
+ endfunction()
+ 
+ function(python_standalone_executable _target)
+-  include_directories(${PYTHON_INCLUDE_DIRS})
+-  target_link_libraries(${_target} ${PYTHON_LIBRARIES})
++  include_directories(${Python_INCLUDE_DIRS})
++  target_link_libraries(${_target} ${Python_LIBRARIES})
+ endfunction()
+ 
+ function(python_modules_header _name)
 diff --git a/python/scikit-build-cmake/UseCython.cmake b/python/scikit-build-cmake/UseCython.cmake
 index 9a59664..8aaa65a 100644
 --- a/python/scikit-build-cmake/UseCython.cmake
