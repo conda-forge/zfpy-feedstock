@@ -13,7 +13,7 @@ cd build
 
 EXTRA_FLAGS=
 if [ `${PYTHON} --version | grep PyPy` ]; then
-    EXTRA_FLAGS="-DPYTHON_LIBRARY=${PREFIX}/pypy/lib/libpypy3-c.so"
+    EXTRA_FLAGS="-DPYTHON_LIBRARY=${PREFIX}/lib/libpypy3-c.so"
 fi
 cmake                              \
   -DBUILD_CFP=ON                   \
