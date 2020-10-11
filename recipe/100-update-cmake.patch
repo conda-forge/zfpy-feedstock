@@ -41,24 +41,17 @@ index 76f9317..c7f8169 100644
 -install(TARGETS zfpy LIBRARY DESTINATION ${python_install_lib_dir})
 +install(TARGETS zfpy LIBRARY DESTINATION ${Python_SITELIB})
 diff --git a/python/scikit-build-cmake/FindCython.cmake b/python/scikit-build-cmake/FindCython.cmake
-index 3d58c4f..61c95ea 100644
+index 3d58c4f..34c62e9 100644
 --- a/python/scikit-build-cmake/FindCython.cmake
 +++ b/python/scikit-build-cmake/FindCython.cmake
-@@ -36,9 +36,16 @@
+@@ -36,9 +36,9 @@
  
  # Use the Cython executable that lives next to the Python executable
  # if it is a local installation.
 -find_package(PythonInterp)
 -if(PYTHONINTERP_FOUND)
 -  get_filename_component(_python_path ${PYTHON_EXECUTABLE} PATH)
-+if(${CMAKE_VERSION} VERSION_LESS "3.18.0")
-+    # Backward compatibility with older version of cmake before pypy support
-+    find_package(PythonInterp)
-+    set(Python_Interpreter_FOUND ${PYTHONINTERP_FOUND})
-+    set(Python_EXECUTABLE ${PYTHON_EXECUTABLE})
-+else()
-+    find_package(Python COMPONENTS Interpreter)
-+endif()
++find_package(Python COMPONENTS Interpreter)
 +if(Python_Interpreter_FOUND)
 +  get_filename_component(_python_path ${Python_EXECUTABLE} PATH)
    find_program(CYTHON_EXECUTABLE
