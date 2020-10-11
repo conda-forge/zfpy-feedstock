@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 #  hmaarrfk: 2020/06/20
 #  Basically, this build is going to reinstall the C libraries
@@ -12,7 +12,7 @@ mkdir build
 cd build
 
 EXTRA_FLAGS=
-if [ `${PYTHON} --version | grep PyPy` ]; then
+if [ `${PYTHON} --version | grep PyPy | wc -l` !== "0" ]; then
     EXTRA_FLAGS="-DPYTHON_LIBRARY=${PREFIX}/lib/libpypy3-c.so"
 fi
 cmake                              \
