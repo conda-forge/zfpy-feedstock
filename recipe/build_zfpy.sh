@@ -16,11 +16,11 @@ cmake                              \
   -DBUILD_ZFPY=ON                  \
   -DZFP_WITH_OPENMP=ON             \
   -DCMAKE_INSTALL_PREFIX=${PREFIX} \
-  -DPython_ROOT_DIR=${PREFIX}      \
-  -DPython_FIND_VIRTUALENV=ONLY    \
   -DCMAKE_INSTALL_LIBDIR=lib       \
   ..
 
+  # -DPython_ROOT_DIR=${PREFIX}
+  # -DPython_FIND_VIRTUALENV=ONLY
 make
 make install
 
