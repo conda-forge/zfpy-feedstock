@@ -53,3 +53,16 @@ index 76f9317..8e6fe37 100644
 -set(python_install_lib_dir "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/")
 -install(TARGETS zfpy LIBRARY DESTINATION ${python_install_lib_dir})
 +install(TARGETS zfpy LIBRARY DESTINATION ${Python_SITELIB})
+diff --git a/python/scikit-build-cmake/FindPythonExtensions.cmake b/python/scikit-build-cmake/FindPythonExtensions.cmake
+index 9a3d76a..01876df 100644
+--- a/python/scikit-build-cmake/FindPythonExtensions.cmake
++++ b/python/scikit-build-cmake/FindPythonExtensions.cmake
+@@ -244,7 +244,7 @@
+ #=============================================================================
+ 
+ find_package(PythonInterp REQUIRED)
+-find_package(PythonLibs)
++#find_package(PythonLibs)
+ include(targetLinkLibrariesWithDynamicLookup)
+ 
+ set(_command "
