@@ -17,6 +17,7 @@ cmake                              \
   -DBUILD_CFP=ON                   \
   -DBUILD_UTILITIES=ON             \
   -DBUILD_ZFPY=ON                  \
+  -DBUILD_TESTING=OFF              \
   -DZFP_WITH_OPENMP=ON             \
   -DCMAKE_INSTALL_PREFIX=${PREFIX} \
   -DPython_ROOT_DIR=${PREFIX}      \
