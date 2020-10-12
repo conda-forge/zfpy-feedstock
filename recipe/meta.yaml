@@ -16,10 +16,15 @@ source:
   url: https://github.com/LLNL/zfp/archive/{{ version }}.tar.gz
   sha256: 6a7f4934489087d9c117a4af327fd6495ea757924f4df467b9c537abf8bd86c4
   patches:
+    # https://github.com/scikit-build/scikit-build/issues/506
     - 100-update-cmake.patch
+    # https://github.com/LLNL/zfp/pull/109
+    # This patch just isn't working. we do it manually in the build script
+    # It is a pretty easy fix, so hopefully upstream will accept it soon
+    # - 109-avoid-importing-cpython-array.patch
 
 build:
-  number: 2
+  number: 3
   script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
   script: {{ RECIPE_DIR }}\bld_zfp.bat       # [win]
   run_exports:
