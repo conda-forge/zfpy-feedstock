@@ -11,8 +11,6 @@ rm -rf build
 mkdir build
 cd build
 
-${PYTHON} --version
-
 cmake                              \
   -DBUILD_CFP=ON                   \
   -DBUILD_UTILITIES=ON             \
@@ -26,6 +24,6 @@ cmake                              \
   -DCMAKE_INSTALL_LIBDIR=lib       \
   ..
 
-make
+make -j${CPU_COUNT}
 make install
 
