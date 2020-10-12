@@ -1,15 +1,5 @@
-From ec8a2d3b7590055b30d89e2196879068a8791dc5 Mon Sep 17 00:00:00 2001
-From: Mark Harfouche <mark.harfouche@gmail.com>
-Date: Mon, 12 Oct 2020 08:30:56 -0400
-Subject: [PATCH] Avoid importing unused cpython array for compatibility with
- pypy
-
----
- python/zfpy.pyx | 2 --
- 1 file changed, 2 deletions(-)
-
 diff --git a/python/zfpy.pyx b/python/zfpy.pyx
-index ffc0fad1..12b25cb7 100644
+index ffc0fad..12b25cb 100644
 --- a/python/zfpy.pyx
 +++ b/python/zfpy.pyx
 @@ -4,9 +4,7 @@ import functools
