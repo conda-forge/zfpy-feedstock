@@ -56,7 +56,6 @@ outputs:
   - name: zfp
   - name: zfpy
     build:
-      skip: True  # [python_impl == 'cpython']
       script: source ${RECIPE_DIR}/build_zfpy.sh  # [unix]
       script: {{ RECIPE_DIR }}\bld_zfpy.bat       # [win]
     requirements:
