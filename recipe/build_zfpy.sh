@@ -18,7 +18,7 @@ rm -rf build
 mkdir build
 cd build
 
-cmake                              \
+cmake ${CMAKE_ARGS}                \
   -DBUILD_CFP=ON                   \
   -DBUILD_UTILITIES=ON             \
   -DBUILD_ZFPY=ON                  \
