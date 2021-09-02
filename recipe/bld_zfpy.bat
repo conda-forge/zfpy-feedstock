@@ -2,8 +2,8 @@ setlocal EnableDelayedExpansion
 
 del /F/Q/S build
 
-type python\zfpy.pyx | findstr /v "from cpython" >  python\zfpy.pyx_temp
-type python\zfpy.pyx_temp | findstr /v "import array" > python\zfpy.pyx
+type python\zfpy.pyx | findstr /v /l "from cpython" >  python\zfpy.pyx_temp
+type python\zfpy.pyx_temp | findstr /v /l "import array" > python\zfpy.pyx
 del python\zfpy.pyx_temp
 
 :: Make a build folder and change to it.
