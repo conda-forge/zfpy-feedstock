@@ -21,7 +21,7 @@ source:
     # https://github.com/LLNL/zfp/pull/109
     # This patch just isn't working. we do it manually in the build script
     # It is a pretty easy fix, so hopefully upstream will accept it soon
-    # - 109-avoid-importing-cpython-array.patch  # [win]
+    - 109-avoid-importing-cpython-array.patch  # [win]
 
 build:
   number: 6
