@@ -1,14 +1,15 @@
 diff --git a/python/zfpy.pyx b/python/zfpy.pyx
-index ffc0fad..12b25cb 100644
+index 1f38697..a500a2a 100644
 --- a/python/zfpy.pyx
 +++ b/python/zfpy.pyx
-@@ -4,9 +4,7 @@ import functools
- import cython
+@@ -1,10 +1,8 @@
+ import sys
+ import operator
+ import functools
+-import cython
  from libc.stdlib cimport malloc, free
  from cython cimport view
 -from cpython cimport array
- from libc.stdint cimport uint8_t
--import array
+ import array
  
  import itertools
- if sys.version_info[0] == 2:
