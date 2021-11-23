@@ -7,6 +7,15 @@ set -ex
 #  but since the build is identical, conda will not find the newly compiled
 #  libraries, and just keep using the old ons
 
+# patch for cross-builds from @erykoff
+if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
+  # workaround until cross-python is fixed
+  rm $BUILD_PREFIX/bin/python
+  ln -sf $PREFIX/bin/python $BUILD_PREFIX/bin/python
+  rm $BUILD_PREFIX/bin/cython
+  ln -sf $PREFIX/bin/cython $BUILD_PREFIX/bin/cython
+fi
+
 rm -rf build
 mkdir build
 cd build
