@@ -19,12 +19,10 @@ source:
     # https://github.com/scikit-build/scikit-build/issues/506
     - 100-update-cmake.patch
     # https://github.com/LLNL/zfp/pull/109
-    # This patch just isn't working. we do it manually in the build script
-    # It is a pretty easy fix, so hopefully upstream will accept it soon
     - 109-avoid-importing-cpython-array.patch
 
 build:
-  number: 7
+  number: 8
   script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
   script: {{ RECIPE_DIR }}\bld_zfp.bat       # [win]
   run_exports:
