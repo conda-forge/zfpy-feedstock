@@ -19,7 +19,7 @@ source:
     - 100-update-cmake.patch
 
 build:
-  number: 0
+  number: 1
   script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
   script: {{ RECIPE_DIR }}\bld_zfp.bat  # [win]
   run_exports:
