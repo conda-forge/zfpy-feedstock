@@ -49,8 +49,10 @@ test:
     - if not exist %LIBRARY_LIB%\zfp.lib exit 1    # [win]
     - if not exist %LIBRARY_PREFIX%\lib\cmake\zfp\zfp-config.cmake exit 1  # [win]
     # Command always returns 1
-    - which zfp  # [unix]
-    - where zfp  # [win]
+    - which zfp     # [unix]
+    # They chose to specifically have a different name for the executable
+    # https://github.com/LLNL/zfp/pull/63
+    - where zfpcmd  # [win]
 
 outputs:
   - name: zfp
