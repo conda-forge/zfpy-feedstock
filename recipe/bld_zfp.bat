@@ -20,10 +20,6 @@ if errorlevel 1 exit 1
 ninja install
 if errorlevel 1 exit 1
 
-REM command line utility not installed for some reason
-copy "bin\zfp.exe" "%LIBRARY_BIN%\."
-if errorlevel 1 exit 1
-
 :: Run tests
 ctest
 if errorlevel 1 exit 1

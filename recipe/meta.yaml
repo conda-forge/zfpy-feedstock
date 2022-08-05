@@ -1,4 +1,4 @@
-{% set version = "0.5.5" %}
+{% set version = "1.0.0" %}
 
 # This package builds 2 outputs
 #    zfp     --- C headers
@@ -14,17 +14,14 @@ package:
 
 source:
   url: https://github.com/LLNL/zfp/archive/{{ version }}.tar.gz
-  sha256: 6a7f4934489087d9c117a4af327fd6495ea757924f4df467b9c537abf8bd86c4
+  sha256: fe13b03141ee9b571692aed42ff76cf37c9dcda40f9a43a808870dca3558a57c
   patches:
-    # https://github.com/scikit-build/scikit-build/issues/506
     - 100-update-cmake.patch
-    # https://github.com/LLNL/zfp/pull/109
-    - 109-avoid-importing-cpython-array.patch
 
 build:
-  number: 8
+  number: 0
   script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
-  script: {{ RECIPE_DIR }}\bld_zfp.bat       # [win]
+  script: {{ RECIPE_DIR }}\bld_zfp.bat  # [win]
   run_exports:
     # No real information, for now, let keep the defaults
     - {{ pin_subpackage('zfp') }}
@@ -52,15 +49,17 @@ test:
     - if not exist %LIBRARY_LIB%\zfp.lib exit 1    # [win]
     - if not exist %LIBRARY_PREFIX%\lib\cmake\zfp\zfp-config.cmake exit 1  # [win]
     # Command always returns 1
-    - which zfp  # [unix]
-    - where zfp  # [win]
+    - which zfp     # [unix]
+    # They chose to specifically have a different name for the executable
+    # https://github.com/LLNL/zfp/pull/63
+    - where zfpcmd  # [win]
 
 outputs:
   - name: zfp
   - name: zfpy
     build:
       script: source ${RECIPE_DIR}/build_zfpy.sh  # [unix]
-      script: {{ RECIPE_DIR }}\bld_zfpy.bat       # [win]
+      script: {{ RECIPE_DIR }}\bld_zfpy.bat  # [win]
     requirements:
       build:
         - {{ compiler('c') }}
@@ -91,7 +90,7 @@ about:
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE
-  summary: 'Library for compressed numerical arrays that support high throughput read and write random access'
+  summary: Library for compressed numerical arrays that support high throughput read and write random access
   description: |
     zfp is an open source C/C++ library for compressed numerical arrays
     that support high throughput read and write random access. zfp also
