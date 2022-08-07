@@ -223,6 +223,3 @@ Feedstock Maintainers
 * [@kmpaul](https://github.com/kmpaul/)
 * [@lindstro](https://github.com/lindstro/)
 
-
-<!-- dummy commit to enable rerendering -->
-
