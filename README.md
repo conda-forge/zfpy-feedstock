@@ -1,7 +1,7 @@
 About zfp
 =========
 
-Home: https://computation.llnl.gov/projects/floating-point-compression
+Home: https://zfp.llnl.gov
 
 Package license: BSD-3-Clause
 
@@ -11,7 +11,7 @@ Summary: Library for compressed numerical arrays that support high throughput re
 
 Development: https://github.com/LLNL/zfp
 
-Documentation: http://zfp.readthedocs.io/en/release0.5.5/
+Documentation: https://zfp.readthedocs.io
 
 zfp is an open source C/C++ library for compressed numerical arrays
 that support high throughput read and write random access. zfp also
