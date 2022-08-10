@@ -96,7 +96,7 @@ about:
     e.g., for applications that read and write large data sets to and
     from disk. zfp is primarily written in C and C++ but also includes
     Python and Fortran bindings.
-  doc_url: https://zfp.readthedocs.io/en/release1.0.0/
+  doc_url: https://zfp.readthedocs.io/
   dev_url: https://github.com/LLNL/zfp
 
 extra:
