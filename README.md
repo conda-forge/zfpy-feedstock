@@ -11,7 +11,7 @@ Summary: Library for compressed numerical arrays that support high throughput re
 
 Development: https://github.com/LLNL/zfp
 
-Documentation: https://zfp.readthedocs.io/en/release1.0.0/
+Documentation: https://zfp.readthedocs.io/
 
 zfp is an open source C/C++ library for compressed numerical arrays
 that support high throughput read and write random access. zfp also
