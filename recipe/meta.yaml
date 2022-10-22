@@ -19,7 +19,7 @@ source:
     - 100-update-cmake.patch
 
 build:
-  number: 1
+  number: 2
   script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
   script: {{ RECIPE_DIR }}\bld_zfp.bat  # [win]
   run_exports:
@@ -84,7 +84,7 @@ outputs:
         - zfpy
 
 about:
-  home: https://computation.llnl.gov/projects/floating-point-compression
+  home: https://zfp.llnl.gov
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE
@@ -96,7 +96,7 @@ about:
     e.g., for applications that read and write large data sets to and
     from disk. zfp is primarily written in C and C++ but also includes
     Python and Fortran bindings.
-  doc_url: http://zfp.readthedocs.io/en/release0.5.5/
+  doc_url: https://zfp.readthedocs.io/
   dev_url: https://github.com/LLNL/zfp
 
 extra:
