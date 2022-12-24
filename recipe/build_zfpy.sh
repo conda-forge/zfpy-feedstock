@@ -7,6 +7,7 @@ set -ex
 #  but since the build is identical, conda will not find the newly compiled
 #  libraries, and just keep using the old ons
 
+EXTRA_ARGS=
 OSX_ARCHITECTURES=""
 if [[ "${target_platform}" == "osx-arm64" ]]; then
   OSX_ARCHITECTURES="-DCMAKE_OSX_ARCHITECTURES=arm64"
@@ -14,6 +15,10 @@ elif [[ "${target_platform}" == "osx-64" ]]; then
   OSX_ARCHITECTURES="-DCMAKE_OSX_ARCHITECTURES=x86_64"
 fi
 
+
+if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
+  CYTHON_EXECUTABLE=${BUILD_PREFIX}/cython
+fi
 rm -rf build
 mkdir build
 cd build
