@@ -16,7 +16,7 @@ fi
 
 
 if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
-  EXTRA_ARGS="${EXTRA_ARGS} -D${BUILD_PREFIX}/cython"
+  EXTRA_ARGS="${EXTRA_ARGS} -DCYTHON_EXECUTABLE=${BUILD_PREFIX}/bin/cython"
 fi
 rm -rf build
 mkdir build
