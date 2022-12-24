@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 set -e
+OSX_ARCHITECTURES=""
+if [[ "${target_platform}" == "osx-arm64" ]]; then
+  OSX_ARCHITECTURES="-DCMAKE_OSX_ARCHITECTURES=arm64"
+elif [[ "${target_platform}" == "osx-64" ]]; then
+  OSX_ARCHITECTURES="-DCMAKE_OSX_ARCHITECTURES=x86_64"
+fi
 
 mkdir build
 cd build
 cmake ${CMAKE_ARGS}                \
+  ${OSX_ARCHITECTURES}             \
   -DBUILD_CFP=ON                   \
   -DBUILD_UTILITIES=ON             \
   -DZFP_WITH_OPENMP=ON             \

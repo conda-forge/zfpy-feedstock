@@ -7,20 +7,23 @@ set -ex
 #  but since the build is identical, conda will not find the newly compiled
 #  libraries, and just keep using the old ons
 
-# patch for cross-builds from @erykoff
-if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
-  # workaround until cross-python is fixed
-  rm $BUILD_PREFIX/bin/python
-  ln -sf $PREFIX/bin/python $BUILD_PREFIX/bin/python
-  rm $BUILD_PREFIX/bin/cython
-  ln -sf $PREFIX/bin/cython $BUILD_PREFIX/bin/cython
+EXTRA_ARGS=
+if [[ "${target_platform}" == "osx-arm64" ]]; then
+  EXTRA_ARGS="${EXTRA_ARGS} -DCMAKE_OSX_ARCHITECTURES=arm64"
+elif [[ "${target_platform}" == "osx-64" ]]; then
+  EXTRA_ARGS="${EXTRA_ARGS} -DCMAKE_OSX_ARCHITECTURES=x86_64"
 fi
 
+
+if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
+  EXTRA_ARGS="${EXTRA_ARGS} -DCYTHON_EXECUTABLE=${BUILD_PREFIX}/bin/cython"
+fi
 rm -rf build
 mkdir build
 cd build
 
 cmake ${CMAKE_ARGS}                \
+  ${EXTRA_ARGS}             \
   -DBUILD_CFP=ON                   \
   -DBUILD_UTILITIES=ON             \
   -DBUILD_ZFPY=ON                  \
@@ -35,4 +38,3 @@ cmake ${CMAKE_ARGS}                \
 
 make -j${CPU_COUNT}
 make install
-
