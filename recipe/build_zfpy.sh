@@ -8,23 +8,22 @@ set -ex
 #  libraries, and just keep using the old ons
 
 EXTRA_ARGS=
-OSX_ARCHITECTURES=""
 if [[ "${target_platform}" == "osx-arm64" ]]; then
-  OSX_ARCHITECTURES="-DCMAKE_OSX_ARCHITECTURES=arm64"
+  EXTRA_ARGS="${EXTRA_ARGS} -DCMAKE_OSX_ARCHITECTURES=arm64"
 elif [[ "${target_platform}" == "osx-64" ]]; then
-  OSX_ARCHITECTURES="-DCMAKE_OSX_ARCHITECTURES=x86_64"
+  EXTRA_ARGS="${EXTRA_ARGS} -DCMAKE_OSX_ARCHITECTURES=x86_64"
 fi
 
 
 if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
-  CYTHON_EXECUTABLE=${BUILD_PREFIX}/cython
+  EXTRA_ARGS="${EXTRA_ARGS} -D${BUILD_PREFIX}/cython"
 fi
 rm -rf build
 mkdir build
 cd build
 
 cmake ${CMAKE_ARGS}                \
-  ${OSX_ARCHITECTURES}             \
+  ${EXTRA_ARGS}             \
   -DBUILD_CFP=ON                   \
   -DBUILD_UTILITIES=ON             \
   -DBUILD_ZFPY=ON                  \
@@ -39,4 +38,3 @@ cmake ${CMAKE_ARGS}                \
 
 make -j${CPU_COUNT}
 make install
-
