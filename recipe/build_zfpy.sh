@@ -7,6 +7,12 @@ set -ex
 #  but since the build is identical, conda will not find the newly compiled
 #  libraries, and just keep using the old ons
 
+OSX_ARCHITECTURES=""
+if [[ "${target_platform}" == "osx-arm64" ]]; then
+  OSX_ARCHITECTURES="-DCMAKE_OSX_ARCHITECTURES=arm64"
+elif [[ "${target_platform}" == "osx-64" ]]; then
+  OSX_ARCHITECTURES="-DCMAKE_OSX_ARCHITECTURES=x86_64"
+fi
 # patch for cross-builds from @erykoff
 if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
   # workaround until cross-python is fixed
@@ -21,6 +27,7 @@ mkdir build
 cd build
 
 cmake ${CMAKE_ARGS}                \
+  ${OSX_ARCHITECTURES}             \
   -DBUILD_CFP=ON                   \
   -DBUILD_UTILITIES=ON             \
   -DBUILD_ZFPY=ON                  \
