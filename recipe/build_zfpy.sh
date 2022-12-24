@@ -13,14 +13,6 @@ if [[ "${target_platform}" == "osx-arm64" ]]; then
 elif [[ "${target_platform}" == "osx-64" ]]; then
   OSX_ARCHITECTURES="-DCMAKE_OSX_ARCHITECTURES=x86_64"
 fi
-# patch for cross-builds from @erykoff
-if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
-  # workaround until cross-python is fixed
-  rm $BUILD_PREFIX/bin/python
-  ln -sf $PREFIX/bin/python $BUILD_PREFIX/bin/python
-  rm $BUILD_PREFIX/bin/cython
-  ln -sf $PREFIX/bin/cython $BUILD_PREFIX/bin/cython
-fi
 
 rm -rf build
 mkdir build
