@@ -1,0 +1,102 @@
+From 83c6e47ecadb95e8ed1c7e92a90129f82017f83d Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Sun, 1 Oct 2023 11:34:43 -0400
+Subject: [PATCH] Update to support Python 3.12
+
+---
+ python/scikit-build-cmake/FindNumPy.cmake     | 33 -------------------
+ .../FindPythonExtensions.cmake                | 10 ++----
+ 2 files changed, 3 insertions(+), 40 deletions(-)
+
+diff --git a/python/scikit-build-cmake/FindNumPy.cmake b/python/scikit-build-cmake/FindNumPy.cmake
+index cd78112b5..64066ada1 100644
+--- a/python/scikit-build-cmake/FindNumPy.cmake
++++ b/python/scikit-build-cmake/FindNumPy.cmake
+@@ -20,17 +20,6 @@
+ #
+ # ``NumPy_INCLUDE_DIR``
+ #
+-# .. note::
+-#
+-#     To support NumPy < v0.15.0 where ``from-template`` and ``conv-template`` are not declared as entry points,
+-#     the module emulates the behavior of standalone executables by setting the corresponding variables with the
+-#     path the the python interpreter and the path to the associated script. For example:
+-#     ::
+-#
+-#         set(NumPy_CONV_TEMPLATE_EXECUTABLE /path/to/python /path/to/site-packages/numpy/distutils/conv_template.py CACHE STRING "Command executing conv-template program" FORCE)
+-#
+-#         set(NumPy_FROM_TEMPLATE_EXECUTABLE /path/to/python /path/to/site-packages/numpy/distutils/from_template.py CACHE STRING "Command executing from-template program" FORCE)
+-#
+ 
+ if(NOT NumPy_FOUND)
+   set(_find_extra_args)
+@@ -59,28 +48,6 @@ if(NOT NumPy_FOUND)
+       OUTPUT_STRIP_TRAILING_WHITESPACE
+       ERROR_QUIET
+       )
+-
+-    # XXX This is required to support NumPy < v0.15.0. See note in module documentation above.
+-    if(NOT NumPy_CONV_TEMPLATE_EXECUTABLE)
+-      execute_process(COMMAND "${PYTHON_EXECUTABLE}"
+-        -c "from numpy.distutils import conv_template; print(conv_template.__file__)"
+-        OUTPUT_VARIABLE _numpy_conv_template_file
+-        OUTPUT_STRIP_TRAILING_WHITESPACE
+-        ERROR_QUIET
+-        )
+-      set(NumPy_CONV_TEMPLATE_EXECUTABLE "${PYTHON_EXECUTABLE}" "${_numpy_conv_template_file}" CACHE STRING "Command executing conv-template program" FORCE)
+-    endif()
+-
+-    # XXX This is required to support NumPy < v0.15.0. See note in module documentation above.
+-    if(NOT NumPy_FROM_TEMPLATE_EXECUTABLE)
+-      execute_process(COMMAND "${PYTHON_EXECUTABLE}"
+-        -c "from numpy.distutils import from_template; print(from_template.__file__)"
+-        OUTPUT_VARIABLE _numpy_from_template_file
+-        OUTPUT_STRIP_TRAILING_WHITESPACE
+-        ERROR_QUIET
+-        )
+-      set(NumPy_FROM_TEMPLATE_EXECUTABLE "${PYTHON_EXECUTABLE}" "${_numpy_from_template_file}" CACHE STRING "Command executing from-template program" FORCE)
+-    endif()
+   endif()
+ endif()
+ 
+diff --git a/python/scikit-build-cmake/FindPythonExtensions.cmake b/python/scikit-build-cmake/FindPythonExtensions.cmake
+index 33e034d09..5a7a5ae9f 100644
+--- a/python/scikit-build-cmake/FindPythonExtensions.cmake
++++ b/python/scikit-build-cmake/FindPythonExtensions.cmake
+@@ -249,7 +249,7 @@ find_package(PythonLibs)
+ include(targetLinkLibrariesWithDynamicLookup)
+ 
+ set(_command "
+-import distutils.sysconfig
++import sysconfig
+ import itertools
+ import os
+ import os.path
+@@ -261,7 +261,7 @@ rel_result = None
+ candidate_lists = []
+ 
+ try:
+-    candidate_lists.append((distutils.sysconfig.get_python_lib(),))
++    candidate_lists.append((sysconfig.get_paths()['purelib'],))
+ except AttributeError: pass
+ 
+ try:
+@@ -282,17 +282,13 @@ for candidate in candidates:
+         rel_result = rel_candidate
+         break
+ 
+-ext_suffix_var = 'SO'
+-if sys.version_info[:2] >= (3, 5):
+-    ext_suffix_var = 'EXT_SUFFIX'
+-
+ sys.stdout.write(\";\".join((
+     os.sep,
+     os.pathsep,
+     sys.prefix,
+     result,
+     rel_result,
+-    distutils.sysconfig.get_config_var(ext_suffix_var)
++    sysconfig.get_config_var('EXT_SUFFIX')
+ )))
+ ")
+ 
