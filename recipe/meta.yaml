@@ -15,9 +15,8 @@ package:
 source:
   url: https://github.com/LLNL/zfp/archive/{{ version }}.tar.gz
   sha256: 4984db6a55bc919831966dd17ba5e47ca7ac58668f4fd278ebd98cd2200da66f
-  # patches:
-  #   - 100-update-cmake.patch
-  #   - 217-python312.patch
+  patches:
+    - fix_find_python_stuff.patch
 
 build:
   number: 0
