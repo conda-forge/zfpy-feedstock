@@ -19,7 +19,7 @@ source:
     - fix_find_python_stuff.patch
 
 build:
-  number: 0
+  number: 1
   script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
   script: {{ RECIPE_DIR }}\bld_zfp.bat  # [win]
   run_exports:
@@ -29,6 +29,7 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - {{ compiler('cxx') }}
     - cmake
     - make     # [unix]
@@ -61,6 +62,7 @@ outputs:
     requirements:
       build:
         - {{ compiler('c') }}
+        - {{ stdlib("c") }}
         - {{ compiler('cxx') }}
         - cmake
         - make     # [unix]
@@ -76,7 +78,6 @@ outputs:
         - {{ pin_subpackage('zfp', exact=True) }}
       run:
         - python
-        - {{ pin_compatible('numpy') }}
         # I don't think run exports work with pin exact subpackage
         - {{ pin_subpackage('zfp', exact=True) }}
     test:
