@@ -19,7 +19,7 @@ source:
     - fix_find_python_stuff.patch
 
 build:
-  number: 3
+  number: 4
   script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
   script: {{ RECIPE_DIR }}\bld_zfp.bat  # [win]
   run_exports:
