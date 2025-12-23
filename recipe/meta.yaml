@@ -75,6 +75,7 @@ outputs:
         - numpy                                  # [build_platform != target_platform]
         - setuptools                             # [build_platform != target_platform]
       host:
+        - pip
         - python
         - numpy
         - cython
@@ -109,6 +110,7 @@ about:
   dev_url: https://github.com/LLNL/zfp
 
 extra:
+  feedstock-name: zfpy
   recipe-maintainers:
     - kmpaul
     - ToreAad
