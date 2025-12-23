@@ -32,3 +32,7 @@ if errorlevel 1 exit 1
 
 ninja install
 if errorlevel 1 exit 1
+
+cd "%SRC_DIR%"
+"%PYTHON%" -m pip install . --no-deps --no-build-isolation --disable-pip-version-check
+if errorlevel 1 exit 1
