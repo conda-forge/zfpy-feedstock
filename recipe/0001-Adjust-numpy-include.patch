@@ -1,0 +1,36 @@
+From 111e34432416b53216fd71b3c5c045ed4fef0255 Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Tue, 23 Dec 2025 22:00:38 -0500
+Subject: [PATCH] Adjust numpy include
+
+---
+ python/CMakeLists.txt | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
+index 634a6a4..c080f65 100644
+--- a/python/CMakeLists.txt
++++ b/python/CMakeLists.txt
+@@ -1,15 +1,13 @@
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/scikit-build-cmake)
++
++find_package(Python COMPONENTS Interpreter Development NumPy REQUIRED)
++
+ include(UseCython)
+ include(FindPythonExtensions)
+-include(FindNumPy)
+-
+-find_package(Python COMPONENTS Interpreter Development REQUIRED)
+-find_package(PythonExtensions REQUIRED)
+ find_package(Cython 0.28 REQUIRED) # >= v0.28 required for const memoryview support
+-find_package(NumPy REQUIRED)
+ 
+ include_directories(${ZFP_SOURCE_DIR}/include)
+-include_directories(${NumPy_INCLUDE_DIR})
++include_directories(${Python_NumPy_INCLUDE_DIRS})
+ 
+ add_cython_target(zfpy zfpy.pyx C PY3)
+ add_library(zfpy MODULE ${zfpy})
+-- 
+2.43.0
+

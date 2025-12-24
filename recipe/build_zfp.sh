@@ -22,6 +22,6 @@ mkdir -p ${PREFIX}/bin
 # Binary not install correctly by cmake
 install bin/zfp ${PREFIX}/bin/.
 
-if [[ "$CONDA_BUILD_CROSS_COMPILATION" != "1" ]]; then
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR:-}" != "" ]]; then
   ./bin/testzfp
 fi

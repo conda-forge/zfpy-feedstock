@@ -7,15 +7,6 @@ set -ex
 #  but since the build is identical, conda will not find the newly compiled
 #  libraries, and just keep using the old ons
 
-# patch for cross-builds from @erykoff
-if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
-  # workaround until cross-python is fixed
-  rm $BUILD_PREFIX/bin/python
-  ln -sf $PREFIX/bin/python $BUILD_PREFIX/bin/python
-  rm $BUILD_PREFIX/bin/cython
-  ln -sf $PREFIX/bin/cython $BUILD_PREFIX/bin/cython
-fi
-
 rm -rf build
 mkdir build
 cd build
@@ -27,12 +18,15 @@ cmake ${CMAKE_ARGS}                \
   -DBUILD_TESTING=OFF              \
   -DZFP_WITH_OPENMP=ON             \
   -DCMAKE_INSTALL_PREFIX=${PREFIX} \
-  -DPython_ROOT_DIR=${PREFIX}      \
-  -DPython_FIND_VIRTUALENV=ONLY    \
-  -DPython_FIND_IMPLEMENTATIONS="PyPy;CPython" \
   -DCMAKE_INSTALL_LIBDIR=lib       \
+  -DPython_ROOT_DIR=${PREFIX}      \
+  -DPython_NumPy_INCLUDE_DIR=$(${PYTHON} -c "import numpy; print(numpy.get_include())") \
   ..
 
+
+  # -DPython_EXECUTABLE=${PYTHON}    \
+  # -DPython_FIND_STRATEGY=LOCATION  \
+  # -DPython_ROOT_DIR=${PREFIX}      \
 make -j${CPU_COUNT}
 make install
 

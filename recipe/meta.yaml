@@ -16,7 +16,9 @@ source:
   url: https://github.com/LLNL/zfp/archive/{{ version }}.tar.gz
   sha256: 4984db6a55bc919831966dd17ba5e47ca7ac58668f4fd278ebd98cd2200da66f
   patches:
-    - fix_find_python_stuff.patch
+    # https://github.com/llnl/zfp/pull/227
+    - 227-fix-find-python.patch
+    - 0001-Adjust-numpy-include.patch
     # remove after >=1.0.1
     - fix_setup_py_brackets.patch
 
@@ -75,7 +77,6 @@ outputs:
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - cython                                 # [build_platform != target_platform]
         - numpy                                  # [build_platform != target_platform]
-        - setuptools                             # [build_platform != target_platform]
       host:
         - pip
         - python
@@ -85,7 +86,6 @@ outputs:
         - {{ pin_subpackage('zfp', exact=True) }}
       run:
         - python
-        # I don't think run exports work with pin exact subpackage
         - {{ pin_subpackage('zfp', exact=True) }}
     test:
       requires:

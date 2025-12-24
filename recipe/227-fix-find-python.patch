@@ -1,0 +1,320 @@
+From 94d258e3060e21ada3e1ab9b5b08b3b38a1eedc8 Mon Sep 17 00:00:00 2001
+From: Thomas Staudinger <Staudi.Kaos@gmail.com>
+Date: Tue, 20 Feb 2024 03:31:07 +0100
+Subject: [PATCH 1/2] python: Use FindPython cmake module instead of deprecated
+ FindPythonInterp
+
+Signed-off-by: Thomas Staudinger <Staudi.Kaos@gmail.com>
+---
+ CMakeLists.txt                                |  2 +-
+ docs/source/installation.rst                  | 10 +++----
+ python/CMakeLists.txt                         |  9 ++-----
+ python/scikit-build-cmake/FindCython.cmake    |  8 +-----
+ python/scikit-build-cmake/FindNumPy.cmake     | 16 ++++++------
+ .../FindPythonExtensions.cmake                | 26 +++++++++----------
+ .../UsePythonExtensions.cmake                 |  2 +-
+ tests/python/CMakeLists.txt                   |  9 ++-----
+ 8 files changed, 33 insertions(+), 49 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 52ae1584e..d4ba034d4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.9)
++cmake_minimum_required(VERSION 3.12)
+ 
+ # Enable MACOSX_RPATH by default
+ cmake_policy(SET CMP0042 NEW)
+diff --git a/docs/source/installation.rst b/docs/source/installation.rst
+index 9009fa891..cccef6868 100644
+--- a/docs/source/installation.rst
++++ b/docs/source/installation.rst
+@@ -142,10 +142,10 @@ Regardless of the settings below, |libzfp| will always be built.
+   CMake will attempt to automatically detect the Python installation to use.
+   If CMake finds multiple Python installations, it will use the newest one.
+   To specify a specific Python installation to use, set
+-  :c:macro:`PYTHON_LIBRARY` and :c:macro:`PYTHON_INCLUDE_DIR` on the
++  :c:macro:`Python_LIBRARY` and :c:macro:`Python_INCLUDE_DIR` on the
+   cmake line::
+ 
+-      cmake -DBUILD_ZFPY=ON -DPYTHON_LIBRARY=/path/to/lib/libpython2.7.so -DPYTHON_INCLUDE_DIR=/path/to/include/python2.7 ..
++      cmake -DBUILD_ZFPY=ON -DPython_LIBRARY=/path/to/lib/libpython2.7.so -DPython_INCLUDE_DIR=/path/to/include/python2.7 ..
+ 
+   CMake default: off.
+   GNU make default: off and ignored.
+@@ -371,14 +371,14 @@ in the same manner that :ref:`build targets <targets>` are specified, e.g.,
+   Default: :code:`cfp`.
+ 
+ 
+-.. c:macro:: PYTHON_LIBRARY
++.. c:macro:: Python_LIBRARY
+ 
+   Path to the Python library, e.g., :file:`/usr/lib/libpython2.7.so`.
+   CMake default: undefined/off.
+   GNU make default: off and ignored.
+ 
+ 
+-.. c:macro:: PYTHON_INCLUDE_DIR
++.. c:macro:: Python_INCLUDE_DIR
+ 
+   Path to the Python include directory, e.g., :file:`/usr/include/python2.7`.
+   CMake default: undefined/off.
+@@ -396,7 +396,7 @@ in the sections below.
+ CMake
+ ^^^^^
+ 
+-CMake builds require version 3.9 or later.  CMake is available
++CMake builds require version 3.12 or later.  CMake is available
+ `here <https://cmake.org>`__.
+ 
+ OpenMP
+diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
+index 9410ddd7f..634a6a44f 100644
+--- a/python/CMakeLists.txt
++++ b/python/CMakeLists.txt
+@@ -1,14 +1,9 @@
+-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.27.0)
+-    cmake_policy(SET CMP0148 OLD)
+-endif ()
+-
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/scikit-build-cmake)
+ include(UseCython)
+ include(FindPythonExtensions)
+ include(FindNumPy)
+ 
+-find_package(PythonInterp REQUIRED)
+-find_package(PythonLibs REQUIRED)
++find_package(Python COMPONENTS Interpreter Development REQUIRED)
+ find_package(PythonExtensions REQUIRED)
+ find_package(Cython 0.28 REQUIRED) # >= v0.28 required for const memoryview support
+ find_package(NumPy REQUIRED)
+@@ -26,5 +21,5 @@ set(PYLIB_BUILD_DIR "${CMAKE_BINARY_DIR}/bin" CACHE PATH "Directory where zfp py
+ set_target_properties(zfpy PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PYLIB_BUILD_DIR})
+ 
+ # Install to the typical python module directory
+-set(python_install_lib_dir "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/")
++set(python_install_lib_dir "lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages/")
+ install(TARGETS zfpy LIBRARY DESTINATION ${python_install_lib_dir})
+diff --git a/python/scikit-build-cmake/FindCython.cmake b/python/scikit-build-cmake/FindCython.cmake
+index c8de13112..5462665bb 100644
+--- a/python/scikit-build-cmake/FindCython.cmake
++++ b/python/scikit-build-cmake/FindCython.cmake
+@@ -36,13 +36,7 @@
+ 
+ # Use the Cython executable that lives next to the Python executable
+ # if it is a local installation.
+-if(Python_EXECUTABLE)
+-  get_filename_component(_python_path ${Python_EXECUTABLE} PATH)
+-elseif(Python3_EXECUTABLE)
+-  get_filename_component(_python_path ${Python3_EXECUTABLE} PATH)
+-elseif(DEFINED PYTHON_EXECUTABLE)
+-  get_filename_component(_python_path ${PYTHON_EXECUTABLE} PATH)
+-endif()
++get_filename_component(_python_path ${Python_EXECUTABLE} PATH)
+ 
+ if(DEFINED _python_path)
+   find_program(CYTHON_EXECUTABLE
+diff --git a/python/scikit-build-cmake/FindNumPy.cmake b/python/scikit-build-cmake/FindNumPy.cmake
+index 275ae1bee..06c44bd06 100644
+--- a/python/scikit-build-cmake/FindNumPy.cmake
++++ b/python/scikit-build-cmake/FindNumPy.cmake
+@@ -44,14 +44,14 @@ if(NOT NumPy_FOUND)
+   find_program(NumPy_CONV_TEMPLATE_EXECUTABLE NAMES conv-template)
+   find_program(NumPy_FROM_TEMPLATE_EXECUTABLE NAMES from-template)
+ 
+-  if(PYTHON_EXECUTABLE)
+-    execute_process(COMMAND "${PYTHON_EXECUTABLE}"
++  if(Python_EXECUTABLE)
++    execute_process(COMMAND "${Python_EXECUTABLE}"
+       -c "import numpy; print(numpy.get_include())"
+       OUTPUT_VARIABLE _numpy_include_dir
+       OUTPUT_STRIP_TRAILING_WHITESPACE
+       ERROR_QUIET
+       )
+-    execute_process(COMMAND "${PYTHON_EXECUTABLE}"
++    execute_process(COMMAND "${Python_EXECUTABLE}"
+       -c "import numpy; print(numpy.__version__)"
+       OUTPUT_VARIABLE NumPy_VERSION
+       OUTPUT_STRIP_TRAILING_WHITESPACE
+@@ -60,31 +60,31 @@ if(NOT NumPy_FOUND)
+ 
+     # XXX This is required to support NumPy < v0.15.0. See note in module documentation above.
+     if(NOT NumPy_CONV_TEMPLATE_EXECUTABLE)
+-      execute_process(COMMAND "${PYTHON_EXECUTABLE}"
++      execute_process(COMMAND "${Python_EXECUTABLE}"
+         -c "from numpy.distutils import conv_template; print(conv_template.__file__)"
+         OUTPUT_VARIABLE _numpy_conv_template_file
+         OUTPUT_STRIP_TRAILING_WHITESPACE
+         ERROR_QUIET
+         )
+-      set(NumPy_CONV_TEMPLATE_EXECUTABLE "${PYTHON_EXECUTABLE}" "${_numpy_conv_template_file}" CACHE STRING "Command executing conv-template program" FORCE)
++      set(NumPy_CONV_TEMPLATE_EXECUTABLE "${Python_EXECUTABLE}" "${_numpy_conv_template_file}" CACHE STRING "Command executing conv-template program" FORCE)
+     endif()
+ 
+     # XXX This is required to support NumPy < v0.15.0. See note in module documentation above.
+     if(NOT NumPy_FROM_TEMPLATE_EXECUTABLE)
+-      execute_process(COMMAND "${PYTHON_EXECUTABLE}"
++      execute_process(COMMAND "${Python_EXECUTABLE}"
+         -c "from numpy.distutils import from_template; print(from_template.__file__)"
+         OUTPUT_VARIABLE _numpy_from_template_file
+         OUTPUT_STRIP_TRAILING_WHITESPACE
+         ERROR_QUIET
+         )
+-      set(NumPy_FROM_TEMPLATE_EXECUTABLE "${PYTHON_EXECUTABLE}" "${_numpy_from_template_file}" CACHE STRING "Command executing from-template program" FORCE)
++      set(NumPy_FROM_TEMPLATE_EXECUTABLE "${Python_EXECUTABLE}" "${_numpy_from_template_file}" CACHE STRING "Command executing from-template program" FORCE)
+     endif()
+   endif()
+ endif()
+ 
+ find_path(NumPy_INCLUDE_DIR
+   numpy/arrayobject.h
+-  PATHS "${_numpy_include_dir}" "${PYTHON_INCLUDE_DIR}"
++  PATHS "${_numpy_include_dir}" "${Python_INCLUDE_DIR}"
+   PATH_SUFFIXES numpy/core/include
+   )
+ 
+diff --git a/python/scikit-build-cmake/FindPythonExtensions.cmake b/python/scikit-build-cmake/FindPythonExtensions.cmake
+index 59b30c2a2..56894f4d6 100644
+--- a/python/scikit-build-cmake/FindPythonExtensions.cmake
++++ b/python/scikit-build-cmake/FindPythonExtensions.cmake
+@@ -242,14 +242,14 @@
+ # limitations under the License.
+ #=============================================================================
+ 
+-find_package(PythonInterp REQUIRED)
+-if(SKBUILD AND NOT PYTHON_LIBRARY)
+-  set(PYTHON_LIBRARY "no-library-required")
+-  find_package(PythonLibs)
+-  unset(PYTHON_LIBRARY)
+-  unset(PYTHON_LIBRARIES)
++find_package(Python REQUIRED)
++if(SKBUILD AND NOT Python_LIBRARY)
++  set(Python_LIBRARY "no-library-required")
++  find_package(Python COMPONENTS Development)
++  unset(Python_LIBRARY)
++  unset(Python_LIBRARIES)
+ else()
+-  find_package(PythonLibs)
++  find_package(Python COMPONENTS Development)
+ endif()
+ include(targetLinkLibrariesWithDynamicLookup)
+ 
+@@ -297,7 +297,7 @@ sys.stdout.write(\";\".join((
+ )))
+ ")
+ 
+-execute_process(COMMAND "${PYTHON_EXECUTABLE}" -c "${_command}"
++execute_process(COMMAND "${Python_EXECUTABLE}" -c "${_command}"
+                 OUTPUT_VARIABLE _list
+                 RESULT_VARIABLE _result)
+ 
+@@ -327,7 +327,7 @@ if(NOT DEFINED PYTHON_EXTENSION_MODULE_SUFFIX)
+ endif()
+ 
+ function(_set_python_extension_symbol_visibility _target)
+-  if(PYTHON_VERSION_MAJOR VERSION_GREATER 2)
++  if(Python_VERSION_MAJOR VERSION_GREATER 2)
+     set(_modinit_prefix "PyInit_")
+   else()
+     set(_modinit_prefix "init")
+@@ -417,7 +417,7 @@ function(python_extension_module _target)
+   endif()
+ 
+   if(NOT _is_non_lib)
+-    include_directories("${PYTHON_INCLUDE_DIRS}")
++    include_directories("${Python_INCLUDE_DIRS}")
+   endif()
+ 
+   if(_is_module_lib)
+@@ -442,7 +442,7 @@ function(python_extension_module _target)
+       endif()
+     endif()
+ 
+-    target_link_libraries_with_dynamic_lookup(${_target} ${PYTHON_LIBRARIES})
++    target_link_libraries_with_dynamic_lookup(${_target} ${Python_LIBRARIES})
+ 
+     if(_is_module_lib)
+       _set_python_extension_symbol_visibility(${_target})
+@@ -451,8 +451,8 @@ function(python_extension_module _target)
+ endfunction()
+ 
+ function(python_standalone_executable _target)
+-  include_directories(${PYTHON_INCLUDE_DIRS})
+-  target_link_libraries(${_target} ${SKBUILD_LINK_LIBRARIES_KEYWORD} ${PYTHON_LIBRARIES})
++  include_directories(${Python_INCLUDE_DIRS})
++  target_link_libraries(${_target} ${SKBUILD_LINK_LIBRARIES_KEYWORD} ${Python_LIBRARIES})
+ endfunction()
+ 
+ function(python_modules_header _name)
+diff --git a/python/scikit-build-cmake/UsePythonExtensions.cmake b/python/scikit-build-cmake/UsePythonExtensions.cmake
+index c411e20c4..7b33c7c97 100644
+--- a/python/scikit-build-cmake/UsePythonExtensions.cmake
++++ b/python/scikit-build-cmake/UsePythonExtensions.cmake
+@@ -168,7 +168,7 @@ function(add_python_library _name)
+       _remove_whitespace(_tempita_command)
+       add_custom_command(
+         OUTPUT ${_source_we}
+-        COMMAND ${PYTHON_EXECUTABLE} -c "${_tempita_command}"
++        COMMAND ${Python_EXECUTABLE} -c "${_tempita_command}"
+         DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${_source}"
+                 ${_args_DEPENDS}
+       )
+diff --git a/tests/python/CMakeLists.txt b/tests/python/CMakeLists.txt
+index 589ac8afa..64a3e9194 100644
+--- a/tests/python/CMakeLists.txt
++++ b/tests/python/CMakeLists.txt
+@@ -1,11 +1,6 @@
+-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.27.0)
+-    cmake_policy(SET CMP0148 OLD)
+-endif ()
+-
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/python/scikit-build-cmake)
+ 
+-find_package(PythonInterp REQUIRED)
+-find_package(PythonLibs REQUIRED)
++find_package(Python COMPONENTS Interpreter Development REQUIRED)
+ find_package(PythonExtensions REQUIRED)
+ find_package(Cython REQUIRED)
+ find_package(NumPy REQUIRED)
+@@ -33,7 +28,7 @@ if(DEFINED ENV{PYTHONPATH})
+ endif()
+ 
+ add_test(NAME test_numpy
+-  COMMAND ${PYTHON_EXECUTABLE} test_numpy.py
++  COMMAND ${Python_EXECUTABLE} test_numpy.py
+   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+ 
+ set_tests_properties(test_numpy PROPERTIES
+
+From 8cdb686e4f838dc0f4ea628c19da5da979fdbee8 Mon Sep 17 00:00:00 2001
+From: Thomas Staudinger <Staudi.Kaos@gmail.com>
+Date: Mon, 26 Feb 2024 23:47:21 +0100
+Subject: [PATCH 2/2] Adjust appveyor.cmake to new cmake Python variables
+
+Signed-off-by: Thomas Staudinger <Staudi.Kaos@gmail.com>
+---
+ cmake/appveyor.cmake | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/cmake/appveyor.cmake b/cmake/appveyor.cmake
+index 29cc79069..0d65e7612 100644
+--- a/cmake/appveyor.cmake
++++ b/cmake/appveyor.cmake
+@@ -53,12 +53,12 @@ if(BUILD_ZFPY)
+   set(CTEST_SITE "${CTEST_SITE}_zfpy$ENV{PYTHON_VERSION}")
+ 
+   # sanitize python include dir path (ex. windows vs linux slashes)
+-  set(PYTHON_INCLUDE_DIR "")
+-  file(TO_CMAKE_PATH "${CTEST_SOURCE_DIRECTORY}\\$ENV{VIRTUALENV_NAME}\\Include" PYTHON_INCLUDE_DIR)
++  set(Python_INCLUDE_DIR "")
++  file(TO_CMAKE_PATH "${CTEST_SOURCE_DIRECTORY}\\$ENV{VIRTUALENV_NAME}\\Include" Python_INCLUDE_DIR)
+ 
+   list(APPEND cfg_options
+-    -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR}
+-    -DPYTHON_LIBRARY=$ENV{PYTHON_LIB_PATH}
++    -DPython_INCLUDE_DIR=${Python_INCLUDE_DIR}
++    -DPython_LIBRARY=$ENV{PYTHON_LIB_PATH}
+     )
+ endif()
+ 
