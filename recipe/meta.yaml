@@ -17,11 +17,14 @@ source:
   sha256: 4984db6a55bc919831966dd17ba5e47ca7ac58668f4fd278ebd98cd2200da66f
   patches:
     - fix_find_python_stuff.patch
+    # remove after >=1.0.1
+    - fix_setup_py_brackets.patch
 
 build:
-  number: 4
-  script: source ${RECIPE_DIR}/build_zfp.sh  # [unix]
-  script: {{ RECIPE_DIR }}\bld_zfp.bat  # [win]
+  number: 5
+  script:
+    - source ${RECIPE_DIR}/build_zfp.sh  # [unix]
+    - {{ RECIPE_DIR }}\bld_zfp.bat       # [win]
   run_exports:
     # No real information, for now, let keep the defaults
     - {{ pin_subpackage('zfp') }}
@@ -57,8 +60,9 @@ outputs:
   - name: zfp
   - name: zfpy
     build:
-      script: source ${RECIPE_DIR}/build_zfpy.sh  # [unix]
-      script: {{ RECIPE_DIR }}\bld_zfpy.bat  # [win]
+      script:
+        - source ${RECIPE_DIR}/build_zfpy.sh  # [unix]
+        - {{ RECIPE_DIR }}\bld_zfpy.bat       # [win]
     requirements:
       build:
         - {{ compiler('c') }}
@@ -71,18 +75,25 @@ outputs:
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - cython                                 # [build_platform != target_platform]
         - numpy                                  # [build_platform != target_platform]
+        - setuptools                             # [build_platform != target_platform]
       host:
+        - pip
         - python
         - numpy
         - cython
+        - setuptools
         - {{ pin_subpackage('zfp', exact=True) }}
       run:
         - python
         # I don't think run exports work with pin exact subpackage
         - {{ pin_subpackage('zfp', exact=True) }}
     test:
+      requires:
+        - pip
       imports:
         - zfpy
+      commands:
+        - pip check
 
 about:
   home: https://zfp.llnl.gov
@@ -101,6 +112,7 @@ about:
   dev_url: https://github.com/LLNL/zfp
 
 extra:
+  feedstock-name: zfpy
   recipe-maintainers:
     - kmpaul
     - ToreAad

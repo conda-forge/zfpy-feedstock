@@ -36,3 +36,5 @@ cmake ${CMAKE_ARGS}                \
 make -j${CPU_COUNT}
 make install
 
+cd "${SRC_DIR}"
+"${PYTHON}" -m pip install . --no-deps --no-build-isolation --disable-pip-version-check
