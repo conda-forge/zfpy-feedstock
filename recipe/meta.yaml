@@ -21,7 +21,7 @@ source:
     - fix_setup_py_brackets.patch
 
 build:
-  number: 5
+  number: 6
   script:
     - source ${RECIPE_DIR}/build_zfp.sh  # [unix]
     - {{ RECIPE_DIR }}\bld_zfp.bat       # [win]
