@@ -13,7 +13,7 @@ index 9410ddd..8fcb45f 100644
 -find_package(PythonInterp REQUIRED)
 -find_package(PythonLibs REQUIRED)
 -find_package(PythonExtensions REQUIRED)
-+find_package(Python COMPONENTS Interpreter Development NumPy REQUIRED)
++find_package(Python COMPONENTS Interpreter Development.Module NumPy REQUIRED)
 +# They use the old find_package(PythonInterp) which expects a few other
 +# variables
 +set(PYTHONINTERP_FOUND TRUE)

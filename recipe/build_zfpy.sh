@@ -27,9 +27,7 @@ cmake ${CMAKE_ARGS}                \
   -DBUILD_TESTING=OFF              \
   -DZFP_WITH_OPENMP=ON             \
   -DCMAKE_INSTALL_PREFIX=${PREFIX} \
-  -DPython_ROOT_DIR=${PREFIX}      \
-  -DPython_FIND_VIRTUALENV=ONLY    \
-  -DPython_FIND_IMPLEMENTATIONS="PyPy;CPython" \
+  -DPython_EXECUTABLE=${PYTHON}    \
   -DCMAKE_INSTALL_LIBDIR=lib       \
   ..
 

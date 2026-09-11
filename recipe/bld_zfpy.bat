@@ -6,8 +6,6 @@ del /F/Q/S build
 mkdir build
 cd build
 
-set PYTHON_LIBRARY=%PREFIX%\libs\python%PY_VER:~0,1%%PY_VER:~2,1%.lib
-
 :: hmaarrfk: 2020/06/20
 :: Basically, this build is going to reinstall the C libraries
 :: we already compiled before
@@ -20,12 +18,8 @@ cmake -G "Ninja"                               ^
   -DBUILD_CFP=ON                               ^
   -DZFP_WITH_OPENMP=ON                         ^
   -DCMAKE_BUILD_TYPE:STRING=Release            ^
-  -DPYTHON_EXECUTABLE:FILEPATH="%PYTHON%"      ^
-  -DPYTHON_LIBRARY:FILEPATH="%PYTHON_LIBRARY%" ^
-  -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
   -DCMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%"    ^
-  -DPython_ROOT_DIR=%PREFIX%                   ^
-  -DPython_FIND_VIRTUALENV=ONLY                ^
+  -DPython_EXECUTABLE="%PYTHON%"               ^
   ..
 
 if errorlevel 1 exit 1
