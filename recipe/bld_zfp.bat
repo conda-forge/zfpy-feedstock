@@ -11,7 +11,6 @@ cmake -G "Ninja"                               ^
   -DBUILD_CFP=ON                               ^
   -DZFP_WITH_OPENMP=ON                         ^
   -DCMAKE_BUILD_TYPE:STRING=Release            ^
-  -DPYTHON_INCLUDE_DIR:PATH="%PREFIX%\include" ^
   -DCMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%"    ^
   ..
 
