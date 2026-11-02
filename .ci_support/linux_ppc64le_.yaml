@@ -1,3 +1,5 @@
+DOCKER_PLATFORM:
+- linux/ppc64le
 c_compiler:
 - gcc
 c_compiler_version:
@@ -8,11 +10,6 @@ c_stdlib_version:
 - '2.17'
 channel_sources:
 - conda-forge
-- conda-forge
-- conda-forge
-- conda-forge
-- conda-forge
-- conda-forge,conda-forge/label/python_rc
 channel_targets:
 - conda-forge main
 cxx_compiler:
@@ -41,5 +38,3 @@ zfp:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-- - python
-  - channel_sources

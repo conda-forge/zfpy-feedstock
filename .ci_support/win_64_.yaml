@@ -4,11 +4,6 @@ c_stdlib:
 - vs
 channel_sources:
 - conda-forge
-- conda-forge
-- conda-forge
-- conda-forge
-- conda-forge
-- conda-forge,conda-forge/label/python_rc
 channel_targets:
 - conda-forge main
 cxx_compiler:
@@ -30,6 +25,3 @@ target_platform:
 - win-64
 zfp:
 - '1.0'
-zip_keys:
-- - python
-  - channel_sources
