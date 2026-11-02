@@ -1,4 +1,4 @@
-{% set version = "1.0.1" %}
+{% set version = "1.0.1.post0" %}
 
 # This package builds 2 outputs
 #    zfp     --- C headers
@@ -14,14 +14,14 @@ package:
 
 source:
   url: https://github.com/LLNL/zfp/archive/{{ version }}.tar.gz
-  sha256: 4984db6a55bc919831966dd17ba5e47ca7ac58668f4fd278ebd98cd2200da66f
+  sha256: 2c2d2ab18d78f8152159171f272177629ddff9b41e748ad88bee2d298d7292a5
   patches:
     - fix_find_python_stuff.patch
     # remove after >=1.0.1
     - fix_setup_py_brackets.patch
 
 build:
-  number: 6
+  number: 0
   script:
     - source ${RECIPE_DIR}/build_zfp.sh  # [unix]
     - {{ RECIPE_DIR }}\bld_zfp.bat       # [win]
